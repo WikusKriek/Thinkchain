@@ -93,7 +93,7 @@ class DataListSidebar extends Component {
 
   render() {
     let { show, handleSidebar, data } = this.props
-    let { name, category, order_status, price, popularity, img } = this.state
+    let { number, name, consignment,packaging, qty, costPrice,salePrice,minQty,recQty, img } = this.state
     return (
       <div
         className={classnames("data-list-sidebar", {
@@ -135,6 +135,16 @@ class DataListSidebar extends Component {
             </FormGroup>
           ) : null}
           <FormGroup>
+            <Label for="data-name">Number</Label>
+            <Input
+              type="text"
+              value={number}
+              placeholder="B-10648"
+              onChange={e => this.setState({ number: e.target.value })}
+              id="data-name"
+            />
+          </FormGroup>
+          <FormGroup>
             <Label for="data-name">Name</Label>
             <Input
               type="text"
@@ -145,53 +155,85 @@ class DataListSidebar extends Component {
             />
           </FormGroup>
           <FormGroup>
-            <Label for="data-category">Category</Label>
+            <Label for="data-category">Consignment</Label>
             <Input
               type="select"
               id="data-category"
-              value={category}
-              onChange={e => this.setState({ category: e.target.value })}>
-              <option>Audio</option>
-              <option>Computers</option>
-              <option>Fitness</option>
-              <option>Appliances</option>
+              value={consignment}
+              onChange={e => this.setState({ consignment: e.target.value })}>
+              <option>true</option>
+              <option>false</option>
+              
             </Input>
           </FormGroup>
           <FormGroup>
-            <Label for="data-popularity">Popularity</Label>
+            <Label for="data-popularity">Qty</Label>
             <Input
               type="number"
-              value={popularity.popValue}
+              value={qty}
               id="data-popularity"
-              placeholder="0 - 100%"
+              placeholder="1"
               onChange={e =>
                 this.setState({
-                  popularity: { popularity, popValue: e.target.value }
+                   qty: e.target.value 
                 })
               }
             />
           </FormGroup>
           <FormGroup>
-            <Label for="data-status">Order Status</Label>
+            <Label for="data-popularity">Minimum Qty</Label>
+            <Input
+              type="number"
+              value={minQty}
+              id="data-popularity"
+              placeholder="10"
+              onChange={e =>
+                this.setState({
+                   minQty: e.target.value 
+                })
+              }
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="data-popularity">Recorded Qty</Label>
+            <Input
+              type="number"
+              value={recQty}
+              id="data-popularity"
+              placeholder="10"
+              onChange={e => this.setState({recQty: e.target.value  })}
+          />
+          </FormGroup>
+          <FormGroup>
+            <Label for="data-status">Packaging</Label>
             <Input
               type="select"
               id="data-status"
-              value={order_status}
-              onChange={e => this.setState({ order_status: e.target.value })}>
-              <option>pending</option>
-              <option>canceled</option>
-              <option>delivered</option>
-              <option>on hold</option>
+              value={packaging}
+              onChange={e => this.setState({ packaging: e.target.value })}>
+              <option>true</option>
+              <option>false</option>
+              
             </Input>
           </FormGroup>
           <FormGroup>
-            <Label for="data-price">Price</Label>
+            <Label for="data-price">Cost Price</Label>
             <Input
               type="number"
-              value={price}
-              onChange={e => this.setState({ price: e.target.value })}
+              value={costPrice}
+              onChange={e => this.setState({ costPrice: e.target.value })}
               id="data-price"
-              placeholder="69.99"
+              placeholder="30.99"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="data-price">Sale Price</Label>
+            <Input
+              type="number"
+              value={salePrice}
+              onChange={e => this.setState({ salePrice: e.target.value })}
+              id="data-price"
+              placeholder="30.99"
             />
           </FormGroup>
           {this.props.thumbView && img.length <= 0 ? (

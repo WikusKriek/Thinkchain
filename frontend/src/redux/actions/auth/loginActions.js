@@ -249,8 +249,9 @@ export const changeRole = role => {
 }
 
 export const  tokenConfig= getState=>{
+
   const token=getState().auth.login.token;
-   
+ 
     const config={
       headers:{
         'content-type':"application/json"

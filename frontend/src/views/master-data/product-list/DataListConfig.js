@@ -29,17 +29,19 @@ import {
   updateData,
   addData,
   filterData
-} from "../../../redux/actions/data-list/"
+} from "../../../redux/actions/product-list/"
 import Sidebar from "./DataListSidebar"
 import Chip from "../../../components/@vuexy/chips/ChipComponent"
 import Checkbox from "../../../components/@vuexy/checkbox/CheckboxesVuexy"
+
+import {store} from '../../../redux/storeConfig/store'
 
 import "../../../assets/scss/plugins/extensions/react-paginate.scss"
 import "../../../assets/scss/pages/data-list.scss"
 
 const chipColors = {
-  "on hold": "warning",
-  delivered: "success",
+  false: "warning",
+  true: "success",
   pending: "primary",
   canceled: "danger"
 }
@@ -136,6 +138,7 @@ const CustomHeader = props => {
 
 class DataListConfig extends Component {
   static getDerivedStateFromProps(props, state) {
+    
     if (
       props.dataList.data.length !== state.data.length ||
       state.currentPage !== props.parsedFilter.page
@@ -164,7 +167,7 @@ class DataListConfig extends Component {
         name: "Name",
         selector: "name",
         sortable: true,
-        minWidth: "300px",
+        minWidth: "200px",
         cell: row => (
           <p title={row.name} className="text-truncate text-bold-500 mb-0">
             {row.name}
@@ -172,39 +175,38 @@ class DataListConfig extends Component {
         )
       },
       {
-        name: "Category",
-        selector: "category",
+        name: "Qty",
+        selector: "qty",
         sortable: true
       },
       {
-        name: "Popularity",
-        selector: "popularity",
-        sortable: true,
-        cell: row => (
-          <Progress
-            className="w-100 mb-0"
-            color={row.popularity.color}
-            value={row.popularity.popValue}
-          />
-        )
+        name: "Number",
+        selector: "number",
+        sortable: true
       },
       {
-        name: "Order Status",
-        selector: "order_status",
+        name: "Packaging",
+        selector: "packaging",
         sortable: true,
         cell: row => (
           <Chip
             className="m-0"
-            color={chipColors[row.order_status]}
-            text={row.order_status}
+            color={chipColors[row.packaging]}
+            text={row.packaging.toString()}
           />
         )
       },
       {
-        name: "Price",
-        selector: "price",
+        name: "Cost Price",
+        selector: "costPrice",
         sortable: true,
-        cell: row => `$${row.price}`
+        cell: row => `R ${row.costPrice}`
+      },
+      {
+        name: "Sale Price",
+        selector: "salePrice",
+        sortable: true,
+        cell: row => `R ${row.salePrice}`
       },
       {
         name: "Actions",
@@ -460,12 +462,12 @@ class DataListConfig extends Component {
 
 const mapStateToProps = state => {
   return {
-    dataList: state.dataList
+    dataList: state.productList
   }
 }
 
 export default connect(mapStateToProps, {
-  getData,
+ getData,
   deleteData,
   updateData,
   addData,

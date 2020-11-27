@@ -13,7 +13,7 @@ const analyticsDashboard = lazy(() =>
   import("./views/dashboard/analytics/AnalyticsDashboard")
 )
 const createProduct = lazy(() =>
-  import("./views/master-data/create-product/create_product")
+  import("./views/master-data/product-list/ListView")
 )
 
 const ecommerceDashboard = lazy(() =>
@@ -91,8 +91,8 @@ const AutoComplete = lazy(() =>
 const chips = lazy(() => import("./components/@vuexy/chips/Chips"))
 const divider = lazy(() => import("./components/@vuexy/divider/Divider"))
 const vuexyWizard = lazy(() => import("./components/@vuexy/wizard/Wizard"))
-const listView = lazy(() => import("./views/ui-elements/data-list/ListView"))
-const thumbView = lazy(() => import("./views/ui-elements/data-list/ThumbView"))
+const listView = lazy(() => import("./views/master-data/product-list/ListView"))
+const thumbView = lazy(() => import("./views/master-data/product-list/ThumbView"))
 const select = lazy(() => import("./views/forms/form-elements/select/Select"))
 const switchComponent = lazy(() =>
   import("./views/forms/form-elements/switch/Switch")
@@ -256,7 +256,7 @@ class AppRouter extends React.Component {
             component={checkout}
             permission="admin"
           />
-          <AppRoute path="/data-list/list-view" component={listView} />
+          //<AppRoute path="/data-list/list-view" component={listView} />
           <AppRoute path="/data-list/thumb-view" component={thumbView} />
           <AppRoute path="/ui-element/grid" component={grid} />
           <AppRoute path="/ui-element/typography" component={typography} />
