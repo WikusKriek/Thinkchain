@@ -1,11 +1,11 @@
 
 const router = require('express').Router();
-let Product = require('../models/products.model');
+let Suply = require('../models/supplier.model');
 const auth =require('../middleware/auth');
 
 router.route('/').get(auth,(request,res) => {
   
-  Product.find({userId:request.user.id})
+  Suply.find({userId:request.user.id})
     .then(dataList => {
       
         let { page, perPage } = request.query
@@ -29,10 +29,10 @@ router.route('/').get(auth,(request,res) => {
 });
 
 router.route('/initial').get((req, res) => {
-  Product.find()
+  Suply.find()
     .then(
       
-      product => res.json(product)
+      supplier => res.json(supplier)
       
     )
     .catch(err => res.status(400).json('Error: ' + err));
@@ -40,7 +40,7 @@ router.route('/initial').get((req, res) => {
 
 
 router.route('/add-data').get((request, res) => {
-  Product.find()
+  Suply.find()
     .then(
       
       dataList => {let data = JSON.parse(request.data).obj
@@ -75,43 +75,43 @@ router.route('/add').post(auth,(request, res) => {
   const minQty = request.body.minQty;
   const recQty = request.body.recQty;
 
-  const newProduct = new Product({userId,number,name,salePrice,costPrice,qty,consignment,packaging,minQty,recQty});
+  const newProduct = new Suply({userId,number,name,salePrice,costPrice,qty,consignment,packaging,minQty,recQty});
 
   newProduct.save()
-    .then(() => res.json('Product added!'))
+    .then(() => res.json('Suply added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/:id').get((req, res) => {
-    Product.findById(req.params.id)
-      .then(product => res.json(product))
+    Suply.findById(req.params.id)
+      .then(supplier => res.json(supplier))
       .catch(err => res.status(400).json('Error: ' + err));
   });
   
   router.route('/:id').delete((req, res) => {
-    Product.findByIdAndDelete(req.params.id)
-      .then(() => res.json('Product deleted.'))
+    Suply.findByIdAndDelete(req.params.id)
+      .then(() => res.json('Suply deleted.'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
   
   router.route('/update/:id').post((request, res) => {
     
-    Product.findById(request.params.id)
-      .then(product => {
+    Suply.findById(request.params.id)
+      .then(supplier => {
         
-        product.number= request.body.number;
-        product.name = request.body.name;
-        product.salePrice = request.body.salePrice;
-        product.costPrice = request.body.costPrice;
-        product.qty = request.body.qty;
-        product.consignment = request.body.consign;
-        product.packaging = request.body.packaging;
-        product.minQty = request.body.minQty;
-        product.recQty = request.body.recQty;
+        supplier.number= request.body.number;
+        supplier.name = request.body.name;
+        supplier.salePrice = request.body.salePrice;
+        supplier.costPrice = request.body.costPrice;
+        supplier.qty = request.body.qty;
+        supplier.consignment = request.body.consign;
+        supplier.packaging = request.body.packaging;
+        supplier.minQty = request.body.minQty;
+        supplier.recQty = request.body.recQty;
         
   
-        product.save()
-          .then(() => res.json('Product updated!'))
+        supplier.save()
+          .then(() => res.json('Suply updated!'))
           .catch(err => res.status(400).json('Error: ' + err));
       })
       .catch(err => res.status(400).json('Error: ' + err));

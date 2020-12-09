@@ -1,3 +1,5 @@
+
+
 const initialState = {
   data: [],
   params: null,
@@ -36,7 +38,7 @@ const getIndex = (arr, arr2, arr3, params = {}) => {
 
 const DataListReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "GET_DATA":
+    case "GET_SUPPLIER":
       return {
         ...state,
         data: action.data,
@@ -49,14 +51,14 @@ const DataListReducer = (state = initialState, action) => {
           action.params
         )
       }
-    case "GET_ALL_DATA":
+    case "GET_ALL_SUPPLIER":
       return {
         ...state,
         allData: action.data,
         totalRecords: action.data.length,
         sortIndex: getIndex(action.data, state.data, state.sortIndex)
       }
-    case "FILTER_DATA":
+    case "FILTER_SUPPLIER":
       let value = action.value
       let filteredData = []
       if (value.length) {
@@ -86,12 +88,12 @@ const DataListReducer = (state = initialState, action) => {
         filteredData = state.data
         return { ...state, filteredData }
       }
-    case "ADD_DATA":
+    case "ADD_SUPPLIER":
       let id = state.data.slice(-1)[0].id + 1
       state.data.push({
         ...action.obj,
-        id,
-        popularity: determinePopularity(action.obj.popularity)
+        id
+        
       })
       moveIndex(
         state.data,
@@ -102,19 +104,19 @@ const DataListReducer = (state = initialState, action) => {
         ...state,
         data: state.data,
         totalRecords: state.allData.length,
-        sortIndex: getIndex(state.allData, state.data, state.sortIndex)
+        //sortIndex: getIndex(state.allData, state.data, state.sortIndex)
       }
-    case "UPDATE_DATA":
+    case "UPDATE_SUPPLIER":
       state.data.find(item => {
         if (item.id === action.obj.id) {
-          let popularity = determinePopularity(action.obj.popularity.popValue)
-          return Object.assign(item, { ...action.obj, popularity })
+          
+          return Object.assign(item,  {...action.obj})
         } else {
           return item
         }
       })
       return { ...state }
-    case "DELETE_DATA":
+    case "DELETE_SUPPLIER":
       let index = state.data.findIndex(item => item.id === action.obj.id)
       let updatedData = [...state.data]
       updatedData.splice(index, 1)

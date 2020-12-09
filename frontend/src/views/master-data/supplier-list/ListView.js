@@ -1,7 +1,7 @@
 import React from "react"
 import { Row, Col } from "reactstrap"
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb"
-import ListViewConfig from "./DataListConfig"
+import ListViewConfig from "./SupplierListConfig"
 import queryString from "query-string"
 class ListView extends React.Component {
   render() {
@@ -10,7 +10,7 @@ class ListView extends React.Component {
         <Breadcrumbs
           breadCrumbTitle="List View"
           breadCrumbParent="Master Data"
-          breadCrumbActive="products View"
+          breadCrumbActive="Suppliers View"
         />
         <Row>
           <Col sm="12">

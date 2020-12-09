@@ -1,20 +1,20 @@
 import React from "react"
 import { Row, Col } from "reactstrap"
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb"
-import ListViewConfig from "./DataListConfig"
+import ThumbViewConfig from "./DataListConfig"
 import queryString from "query-string"
-class ListView extends React.Component {
+class ThumbView extends React.Component {
   render() {
     return (
       <React.Fragment>
         <Breadcrumbs
-          breadCrumbTitle="List View"
-          breadCrumbParent="Master Data"
-          breadCrumbActive="products View"
+          breadCrumbTitle="Thumb View"
+          breadCrumbParent="Data List"
+          breadCrumbActive="Thumb View"
         />
         <Row>
           <Col sm="12">
-            <ListViewConfig parsedFilter={queryString.parse(this.props.location.search)}/>
+            <ThumbViewConfig thumbView={true} parsedFilter={queryString.parse(this.props.location.search)}/>
           </Col>
         </Row>
       </React.Fragment>
@@ -22,4 +22,4 @@ class ListView extends React.Component {
   }
 }
 
-export default ListView
+export default ThumbView

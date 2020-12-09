@@ -15,7 +15,12 @@ const analyticsDashboard = lazy(() =>
 const createProduct = lazy(() =>
   import("./views/master-data/product-list/ListView")
 )
-
+const createOrders = lazy(() =>
+  import("./views/orders/orders")
+)
+const createSupplier = lazy(() =>
+  import("./views/master-data/supplier-list/ListView")
+)
 const ecommerceDashboard = lazy(() =>
   import("./views/dashboard/ecommerce/EcommerceDashboard")
 )
@@ -230,6 +235,14 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/master-data/creat-product"
             component={createProduct}
+          />
+          <AppRoute
+            path="/master-data/creat-supplier"
+            component={createSupplier}
+          />
+          <AppRoute
+            path="/orders/"
+            component={createOrders}
           />
           <AppRoute
             path="/email"

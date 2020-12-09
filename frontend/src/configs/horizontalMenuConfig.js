@@ -1081,6 +1081,22 @@ const horizontalMenuConfig = [
         icon: <Icon.Mail size={16} />,
         navLink: "/master-data/creat-product",
         permissions: ["admin", "editor"]
+      },
+      {
+        id: "create_supplier",
+        title: "Create Supplier",
+        type: "item",
+        icon: <Icon.Mail size={16} />,
+        navLink: "/master-data/creat-supplier",
+        permissions: ["admin", "editor"]
+      },
+      {
+        id: "create_orders",
+        title: "Orders",
+        type: "item",
+        icon: <Icon.Mail size={16} />,
+        navLink: "/orders/",
+        permissions: ["admin", "editor"]
       }]
   }
 ]
