@@ -1073,6 +1073,7 @@ const horizontalMenuConfig = [
     title: "Master Data",
     type: "dropdown",
     icon: <Icon.Grid size={16} />,
+    permissions: ["admin", "editor","user"],
     children: [
       {
         id: "create_product",
@@ -1083,21 +1084,39 @@ const horizontalMenuConfig = [
         permissions: ["admin", "editor"]
       },
       {
+        id: "create_product_grid",
+        title: "Create Product Grid",
+        type: "item",
+        icon: <Icon.Mail size={16} />,
+        navLink: "/master-data/creat-product-grid",
+        permissions: ["admin", "editor","user"]
+      },
+      {
         id: "create_supplier",
         title: "Create Supplier",
         type: "item",
         icon: <Icon.Mail size={16} />,
         navLink: "/master-data/creat-supplier",
         permissions: ["admin", "editor"]
-      },
+      }
+     ]
+  },
+  {
+    id: "Orders",
+    title: "Orders",
+    type: "dropdown",
+    icon: <Icon.Grid size={16} />,
+    permissions: ["admin", "editor","user"],
+    children: [
       {
-        id: "create_orders",
-        title: "Orders",
+        id: "view_orders",
+        title: "View Orders",
         type: "item",
         icon: <Icon.Mail size={16} />,
         navLink: "/orders/",
-        permissions: ["admin", "editor"]
-      }]
+        permissions: ["admin", "editor","user"]
+      }
+      ]
   }
 ]
 

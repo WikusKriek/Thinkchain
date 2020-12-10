@@ -6,21 +6,8 @@ const auth =require('../middleware/auth');
 router.route('/').get(auth,(request,res) => {
   
   Product.find({userId:request.user.id})
-    .then(dataList => {
-      
-        let { page, perPage } = request.query
-        
-        let totalPages = Math.ceil(dataList.length / perPage)
-        if (page !== undefined && perPage !== undefined) {
-          let calculatedPage = (page - 1) * perPage
-          let calculatedPerPage = page * perPage
-          
-            res.json({ data: dataList.slice(calculatedPage, calculatedPerPage), totalPages })
-          
-        } else {
-          res.json( {data: dataList.slice(0, 4), totalPages: Math.ceil(dataList.length / 4) })
-        }
-      
+    .then(dataList => {    
+    res.json({ data: dataList })
     })
     .catch(err => {return [
       200,
@@ -104,7 +91,7 @@ router.route('/:id').get((req, res) => {
         product.salePrice = request.body.salePrice;
         product.costPrice = request.body.costPrice;
         product.qty = request.body.qty;
-        product.consignment = request.body.consign;
+        product.consignment = request.body.consignment;
         product.packaging = request.body.packaging;
         product.minQty = request.body.minQty;
         product.recQty = request.body.recQty;

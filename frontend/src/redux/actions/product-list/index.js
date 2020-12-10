@@ -4,7 +4,7 @@ import {tokenConfig} from "../auth/loginActions"
 
 
 
-export const getData = params=>{
+export const getData=() =>{
   const token=localStorage.getItem('token')
  
     const config={
@@ -14,16 +14,15 @@ export const getData = params=>{
     }
     if (token){
       config.headers['x-auth-token']=token;
-      config.params=params;
+      
     }
   return async dispatch => {
     await axios.get("http://localhost:5000/products/", config).then(response => {
       
       dispatch({
         type: "GET_DATA",
-        data: response.data.data,
-        totalPages: response.data.totalPages,
-        params
+        data: response.data.data
+        
       })
     }).catch(err=>console.log(err))
   }

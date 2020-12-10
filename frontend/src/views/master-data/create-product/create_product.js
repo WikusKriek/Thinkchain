@@ -1,4 +1,5 @@
 import React from "react"
+import Sidebar from "./addProductsSidebar"
 import {
   Card,
   CardBody,
@@ -9,12 +10,25 @@ import {
   DropdownItem,
   DropdownToggle
 } from "reactstrap"
+import {
+  Edit,
+  Trash,
+  ChevronDown,
+  Plus,
+  Check,
+  ChevronLeft,
+  ChevronRight
+} from "react-feather"
 import { AgGridReact } from "ag-grid-react"
 import { ContextLayout } from "../../../utility/context/Layout"
-import { ChevronDown } from "react-feather"
+import classnames from "classnames"
+
 import axios from "axios"
 
+
 import "../../../assets/scss/plugins/tables/_agGridStyleOverride.scss"
+import "../../../assets/scss/plugins/extensions/react-paginate.scss"
+import "../../../assets/scss/pages/data-list.scss"
 
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb"
 
@@ -24,11 +38,21 @@ class AggridTable extends React.Component {
     paginationPageSize: 20,
     currenPageSize: "",
     getPageSize: "",
+    sidebar: false,
+    allData: [],
+    value: "",
+    rowsPerPage: 4,
+    currentData: null,
+    selected: [],
+    totalRecords: 0,
+    sortIndex: [],
+    addNew: "",
     defaultColDef: {
       sortable: true,
       editable: true,
       resizable: true,
-      suppressMenu: true
+      suppressMenu: true,
+      
     },
     columnDefs: [
       {
@@ -94,13 +118,53 @@ class AggridTable extends React.Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:5000/products/").then(response => {
-      let rowData = response.data
+
+    const token=localStorage.getItem('token')
+ 
+    const config={
+      headers:{
+        'content-type':"application/json"
+      }
+    }
+    if (token){
+      config.headers['x-auth-token']=token;
+      
+    }
+  
+     axios.get("http://localhost:5000/products/", config).then(response => {
+      let rowData = response.data.data
       JSON.stringify(rowData)
       this.setState({ rowData })
-    })
-  }
+      
+    }).catch(err=>console.log(err))
+  
 
+    
+  }
+  getrowdata(){
+    const token=localStorage.getItem('token')
+ 
+    const config={
+      headers:{
+        'content-type':"application/json"
+      }
+    }
+    if (token){
+      config.headers['x-auth-token']=token;
+      
+    }
+  
+     axios.get("http://localhost:5000/products/", config).then(response => {
+      let rowData = response.data.data
+      JSON.stringify(rowData)
+      this.setState({ rowData })
+      this.gridApi.setRowData(rowData)
+      
+    }).catch(err=>console.log(err))
+  }
+   onCellValueChanged=params=> {
+    console.log('Data after change is', params);
+  }
   onGridReady = params => {
     this.gridApi = params.api
     this.gridColumnApi = params.columnApi
@@ -114,7 +178,45 @@ class AggridTable extends React.Component {
   updateSearchQuery = val => {
     this.gridApi.setQuickFilter(val)
   }
+  handleSidebar = (boolean, addNew = false) => {
+    this.setState({ sidebar: boolean })
+    if (addNew === true) this.setState({ currentData: null, addNew: true })
+  }
+  handleCurrentData = obj => {
+    this.setState({ currentData: obj })
+    this.handleSidebar(true)
+  }
+  onCellValueChanged = (event) => {
+    console.log('Data after change is', event.data);
+    axios
+      .post("http://localhost:5000/products/update/"+event.data['_id'], 
+        event.data
+      )
+      .then(response => {
+       console.log(response) 
+        
+      })
+  };
 
+  deletevalues (){
+    console.log(this.gridApi.getSelectedNodes())
+    if(this.gridApi.getSelectedNodes().length>0){
+      for (var row of this.gridApi.getSelectedNodes() ){
+        axios
+        .delete("http://localhost:5000/products/"+row.data['_id'], 
+          row.data
+        )
+        .then(response => {
+          
+          if(response.status==200){
+            console.log(response);
+          }
+        })
+      }
+      this.getrowdata();
+    }
+  }
+  
   filterSize = val => {
     if (this.gridApi) {
       this.gridApi.paginationSetPageSize(Number(val))
@@ -126,9 +228,29 @@ class AggridTable extends React.Component {
   }
 
   render() {
-    const { rowData, columnDefs, defaultColDef } = this.state
+    const { rowData, columnDefs, defaultColDef,sidebar } = this.state
     return (
-      <React.Fragment>
+      
+      <div
+      className={`data-list `}>
+        <Sidebar
+          show={sidebar}
+          
+          updateData={this.props.updateData}
+          addData={this.props.addData}
+          handleSidebar={this.handleSidebar}
+          thumbView={this.props.thumbView}
+          getData={this.props.getData}
+          dataParams={this.props.parsedFilter}
+          addNew={this.state.addNew}
+        />
+        <div
+          className={classnames("data-list-overlay", {
+            show: sidebar
+          })}
+          onClick={() => this.handleSidebar(false, true)}
+        />
+        
         <Breadcrumbs
           breadCrumbTitle="Create Product"
           breadCrumbParent="Master Data"
@@ -185,12 +307,34 @@ class AggridTable extends React.Component {
                     </UncontrolledDropdown>
 
                     <div className="table-input ml-1">
-                    <Button.Ripple
+                    <Button
+                    className="add-new-btn"
+                    color="primary"
+                    onClick={() => this.handleSidebar(true, true)}
+                    outline>
+                    <Plus size={15} className="mr-50"/>
+                    <span className="align-middle">Add New</span>
+                  </Button>
+                    </div>
+                    <div className="table-input ml-1">
+                    <Button
+                    className="add-new-btn"
+                    color="primary"
+                    onClick={() => this.deletevalues()}
+                    outline>
+                    <Trash size={15} className="mr-50"/>
+                    <span className="align-middle">Delete</span>
+                  </Button>
+                    </div>
+                    <div className="export-btn ml-1">
+                      <Button.Ripple
                         color="primary"
-                        onClick={() => this.gridApi.exportDataAsCsv()}
+                        onClick={() => {
+                          this.getrowdata()}}
                       >
-                        Export as CSV
+                        Refresh
                       </Button.Ripple>
+                      
                     </div>
                     
                   </div>
@@ -203,17 +347,20 @@ class AggridTable extends React.Component {
                       />
                     </div>
                     
-                    <div className="export-btn">
+                    <div className="export-btn ml-1">
                       <Button.Ripple
                         color="primary"
                         onClick={() => this.gridApi.exportDataAsCsv()}
                       >
                         Export as CSV
                       </Button.Ripple>
+                      
                     </div>
+                   
                     
                   </div>
                 </div>
+                
                 <ContextLayout.Consumer>
                   {context => (
                     <AgGridReact
@@ -223,6 +370,7 @@ class AggridTable extends React.Component {
                       columnDefs={columnDefs}
                       rowData={rowData}
                       onGridReady={this.onGridReady}
+                      onCellValueChanged={this.onCellValueChanged.bind(this)}
                       colResizeDefault={"shift"}
                       animateRows={true}
                       floatingFilter={true}
@@ -237,7 +385,9 @@ class AggridTable extends React.Component {
             )}
           </CardBody>
         </Card>
-      </React.Fragment>
+        
+        </div>
+      
     )
   }
 }

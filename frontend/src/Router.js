@@ -15,6 +15,9 @@ const analyticsDashboard = lazy(() =>
 const createProduct = lazy(() =>
   import("./views/master-data/product-list/ListView")
 )
+const createProductGrid = lazy(() =>
+  import("./views/master-data/create-product/create_product")
+)
 const createOrders = lazy(() =>
   import("./views/orders/orders")
 )
@@ -235,6 +238,12 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/master-data/creat-product"
             component={createProduct}
+          />
+          
+
+          <AppRoute
+            path="/master-data/creat-product-grid"
+            component={createProductGrid}
           />
           <AppRoute
             path="/master-data/creat-supplier"

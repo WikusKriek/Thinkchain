@@ -41,15 +41,8 @@ const DataListReducer = (state = initialState, action) => {
     case "GET_DATA":
       return {
         ...state,
-        data: action.data,
-        totalPages: action.totalPages,
-        params: action.params,
-        sortIndex: getIndex(
-          state.allData,
-          action.data,
-          state.sortIndex,
-          action.params
-        )
+        data: action.data
+        
       }
     case "GET_ALL_DATA":
       return {
