@@ -1,5 +1,5 @@
 import React from "react"
-import Sidebar from "./addProductsSidebar"
+import Sidebar from "./addSupplierSidebar"
 import {
   Card,
   CardBody,
@@ -34,18 +34,8 @@ import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb"
 
 class AggridTable extends React.Component {
   state = {
-    rowData: null,
-    paginationPageSize: 20,
-    currenPageSize: "",
-    getPageSize: "",
+    
     sidebar: false,
-    allData: [],
-    value: "",
-    rowsPerPage: 4,
-    currentData: null,
-    selected: [],
-    totalRecords: 0,
-    sortIndex: [],
     addNew: "",
     defaultColDef: {
       sortable: true,
@@ -56,9 +46,9 @@ class AggridTable extends React.Component {
     },
     columnDefs: [
       {
-        headerName: "Product Number",
-        field: "number",
-        width: 250,
+        headerName: "Supplier",
+        field: "name",
+        minWidth: 250,
         filter: true,
         checkboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
@@ -66,58 +56,35 @@ class AggridTable extends React.Component {
         pinned: window.innerWidth > 992 ? "left" : false
       },
       {
-        headerName: "Product Name",
-        field: "name",
+        headerName: "Contact Name",
+        field: "contactName",
         filter: true,
-        width: 175
+        minWidth: 175
       },
       {
-        headerName: "Sale price",
-        field: "salePrice",
+        headerName: "Contact Surname",
+        field: "contactSurname",
         filter: true,
-        width: 150,
+        minWidth: 150,
         
       },
       {
-        headerName: "Cost Price",
-        field: "costPrice",
+        headerName: "Contact Tel",
+        field: "tel",
         filter: true,
-        width: 150
+        minWidth: 150
       },
       {
-        headerName: "Qty",
-        field: "qty",
+        headerName: "Contact Email",
+        field: "email",
         filter: true,
-        width: 150
+        minWidth: 150
       },
-      {
-        headerName: "Consignment",
-        field: "consignment",
-        filter: true,
-        width: 150
-      },
-      {
-        headerName: "Packaging",
-        field: "packaging",
-        filter: true,
-        width: 150
-      },
-      {
-        headerName: "Min Qty",
-        field: "minQty",
-        filter: "agNumberColumnFilter",
-        width: 140
-      },
-      {
-        headerName: "Rec Qty",
-        field: "recQty",
-        filter: "agNumberColumnFilter",
-        width: 140
-      }
+      
     ]
   }
 
-  componentDidMount() {
+  async componentDidMount() {
 
     const token=localStorage.getItem('token')
  
@@ -131,7 +98,7 @@ class AggridTable extends React.Component {
       
     }
   
-     axios.get("http://localhost:5000/products/", config).then(response => {
+     await axios.get("http://localhost:5000/supplier/", config).then(response => {
       let rowData = response.data.data
       JSON.stringify(rowData)
       this.setState({ rowData })
@@ -154,7 +121,7 @@ class AggridTable extends React.Component {
       
     }
   
-     axios.get("http://localhost:5000/products/", config).then(response => {
+     axios.get("http://localhost:5000/supplier/", config).then(response => {
       let rowData = response.data.data
       JSON.stringify(rowData)
       this.setState({ rowData })
@@ -168,11 +135,13 @@ class AggridTable extends React.Component {
   onGridReady = params => {
     this.gridApi = params.api
     this.gridColumnApi = params.columnApi
+    this.gridApi.sizeColumnsToFit()
     this.setState({
       currenPageSize: this.gridApi.paginationGetCurrentPage() + 1,
       getPageSize: this.gridApi.paginationGetPageSize(),
       totalPages: this.gridApi.paginationGetTotalPages()
     })
+    this.gridApi.sizeColumnsToFit()
   }
 
   updateSearchQuery = val => {
@@ -189,7 +158,7 @@ class AggridTable extends React.Component {
   onCellValueChanged = (event) => {
     console.log('Data after change is', event.data);
     axios
-      .post("http://localhost:5000/products/update/"+event.data['_id'], 
+      .post("http://localhost:5000/supplier/update/"+event.data['_id'], 
         event.data
       )
       .then(response => {
@@ -203,7 +172,7 @@ class AggridTable extends React.Component {
     if(this.gridApi.getSelectedNodes().length>0){
       for (var row of this.gridApi.getSelectedNodes() ){
         axios
-        .delete("http://localhost:5000/products/"+row.data['_id'], 
+        .delete("http://localhost:5000/supplier/"+row.data['_id'], 
           row.data
         )
         .then(response => {
@@ -252,9 +221,9 @@ class AggridTable extends React.Component {
         />
         
         <Breadcrumbs
-          breadCrumbTitle="Create Product"
+          breadCrumbTitle="Supplier Grid"
           breadCrumbParent="Master Data"
-          breadCrumbActive="Create Product"
+          breadCrumbActive="Supplier Grid"
         />
         <Card className="overflow-hidden agGrid-card">
           <CardBody className="py-0">
@@ -264,17 +233,7 @@ class AggridTable extends React.Component {
                   <div className="d-flex flex-wrap justify-content-between mb-1">
                     <UncontrolledDropdown className="p-1 ag-dropdown">
                       <DropdownToggle tag="div">
-                        {this.gridApi
-                          ? this.state.currenPageSize
-                          : "" * this.state.getPageSize -
-                            (this.state.getPageSize - 1)}{" "}
-                        -{" "}
-                        {this.state.rowData.length -
-                          this.state.currenPageSize * this.state.getPageSize >
-                        0
-                          ? this.state.currenPageSize * this.state.getPageSize
-                          : this.state.rowData.length}{" "}
-                        of {this.state.rowData.length}
+                        
                         <ChevronDown className="ml-50" size={15} />
                       </DropdownToggle>
                       <DropdownMenu right>

@@ -1083,12 +1083,21 @@ const horizontalMenuConfig = [
         navLink: "/master-data/creat-product",
         permissions: ["admin", "editor"]
       },
+      
       {
         id: "create_product_grid",
-        title: "Create Product Grid",
+        title: "Product Grid",
         type: "item",
         icon: <Icon.Mail size={16} />,
-        navLink: "/master-data/creat-product-grid",
+        navLink: "/product-grid",
+        permissions: ["admin", "editor","user"]
+      },
+      {
+        id: "create_supplier_grid",
+        title: "Supplier Grid",
+        type: "item",
+        icon: <Icon.Mail size={16} />,
+        navLink: "/supplier-grid",
         permissions: ["admin", "editor","user"]
       },
       {
@@ -1110,7 +1119,7 @@ const horizontalMenuConfig = [
     children: [
       {
         id: "view_orders",
-        title: "View Orders",
+        title: "Stock Orders",
         type: "item",
         icon: <Icon.Mail size={16} />,
         navLink: "/orders/",

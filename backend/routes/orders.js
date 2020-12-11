@@ -1,11 +1,11 @@
 
 const router = require('express').Router();
-let Suply = require('../models/supplier.model');
+let Order = require('../models/orders.model');
 const auth =require('../middleware/auth');
 
 router.route('/').get(auth,(request,res) => {
   
-  Suply.find({userId:request.user.id})
+  Order.find({userId:request.user.id})
     .then(dataList => {
       
             res.json({ data: dataList })
@@ -17,10 +17,10 @@ router.route('/').get(auth,(request,res) => {
 });
 
 router.route('/initial').get((req, res) => {
-  Suply.find()
+  Order.find()
     .then(
       
-      supplier => res.json(supplier)
+      orders => res.json(orders)
       
     )
     .catch(err => res.status(400).json('Error: ' + err));
@@ -28,7 +28,7 @@ router.route('/initial').get((req, res) => {
 
 
 router.route('/add-data').get((request, res) => {
-  Suply.find()
+  Order.find()
     .then(
       
       dataList => {let data = JSON.parse(request.data).obj
@@ -53,45 +53,45 @@ router.route('/add-data').get((request, res) => {
 
 router.route('/add').post(auth,(request, res) => {
   const userId= request.user.id;
-  const tel= request.body.tel;
-  const name = request.body.name;
-  const contactName = request.body.contactName;
-  const contactSurname = request.body.contactSurname;
-  const email = request.body.email;
+  const orderId= request.body.orderId;
+  const supplierName = request.body.supplierName;
+  const supplierId = request.body.supplierId;
+  const orderDate = request.body.orderDate;
+  const status = request.body.status;
   
 
-  const newProduct = new Suply({userId,tel,name,contactName,contactSurname,email});
+  const newProduct = new Order({userId,orderId,supplierId,supplierName,orderDate,status});
 
   newProduct.save()
-    .then(() => res.json('Suplier added!'))
+    .then(() => res.json('Order added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/:id').get((req, res) => {
-    Suply.findById(req.params.id)
-      .then(supplier => res.json(supplier))
+    Order.findById(req.params.id)
+      .then(orders => res.json(orders))
       .catch(err => res.status(400).json('Error: ' + err));
   });
   
   router.route('/:id').delete((req, res) => {
-    Suply.findByIdAndDelete(req.params.id)
-      .then(() => res.json('Suply deleted.'))
+    Order.findByIdAndDelete(req.params.id)
+      .then(() => res.json('Order deleted.'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
   
   router.route('/update/:id').post((request, res) => {
     
-    Suply.findById(request.params.id)
-      .then(supplier => {
+    Order.findById(request.params.id)
+      .then(orders => {
         
-        supplier.tel= request.body.tel;
-        supplier.name = request.body.name;
-        supplier.contactName = request.body.contactName;
-        supplier.contactSurname = request.body.contactSurname;
-        supplier.email = request.body.email;
+        orders.orderId= request.body.orderId;
+        orders.supplierName = request.body.supplierName;
+        orders.supplierId = request.body.supplierId;
+        orders.orderDate = request.body.orderDate;
+        orders.status = request.body.status;
         
-        supplier.save()
-          .then(() => res.json('Suplier updated!'))
+        orders.save()
+          .then(() => res.json('Order updated!'))
           .catch(err => res.status(400).json('Error: ' + err));
       })
       .catch(err => res.status(400).json('Error: ' + err));

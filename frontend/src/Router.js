@@ -16,10 +16,16 @@ const createProduct = lazy(() =>
   import("./views/master-data/product-list/ListView")
 )
 const createProductGrid = lazy(() =>
-  import("./views/master-data/create-product/create_product")
+  import("./views/master-data/product-grid/create_product")
+)
+const createSupplierGrid = lazy(() =>
+  import("./views/master-data/supplier-grid/supplier_grid")
 )
 const createOrders = lazy(() =>
-  import("./views/orders/orders")
+  import("./views/orders/StockOrders")
+)
+const orderList = lazy(() =>
+  import("./views/orders/OrderList")
 )
 const createSupplier = lazy(() =>
   import("./views/master-data/supplier-list/ListView")
@@ -235,15 +241,19 @@ class AppRouter extends React.Component {
             path="/ecommerce-dashboard"
             component={ecommerceDashboard}
           />
+          
           <AppRoute
             path="/master-data/creat-product"
             component={createProduct}
           />
-          
+          <AppRoute
+            path="/product-grid"
+            component={createProductGrid}
+          />
 
           <AppRoute
-            path="/master-data/creat-product-grid"
-            component={createProductGrid}
+            path="/supplier-grid"
+            component={createSupplierGrid}
           />
           <AppRoute
             path="/master-data/creat-supplier"
@@ -252,6 +262,15 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/orders/"
             component={createOrders}
+          />
+          <AppRoute
+            path="/orderslist"
+            exact
+            component={() => <Redirect to="/orders/all" />}
+          />
+          <AppRoute
+            path="/orderslist/"
+            component={orderList}
           />
           <AppRoute
             path="/email"
