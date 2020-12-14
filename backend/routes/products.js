@@ -15,6 +15,23 @@ router.route('/').get(auth,(request,res) => {
     ]});
 });
 
+
+router.route('/supplier/:id').get(auth,(request,res) => {
+  
+  Product.find({supplierId:request.params.id})
+    .then(dataList => {
+      let productList=[]
+      for (data of dataList){
+          productList.push({value:data["_id"],label:data.name,color: "#7367f0",product:data})
+      }
+            res.json({ data: productList })
+    })
+    .catch(err => {return [
+      200,
+      { error: err}
+    ]});
+});
+
 router.route('/initial').get((req, res) => {
   Product.find()
     .then(
@@ -52,6 +69,7 @@ router.route('/add-data').get((request, res) => {
 
 router.route('/add').post(auth,(request, res) => {
   const userId= request.user.id;
+  const supplierId= request.body.supplierId;
   const number= request.body.number;
   const name = request.body.name;
   const salePrice = request.body.salePrice;
@@ -62,7 +80,7 @@ router.route('/add').post(auth,(request, res) => {
   const minQty = request.body.minQty;
   const recQty = request.body.recQty;
 
-  const newProduct = new Product({userId,number,name,salePrice,costPrice,qty,consignment,packaging,minQty,recQty});
+  const newProduct = new Product({userId,number,name,salePrice,costPrice,qty,consignment,packaging,minQty,recQty,supplierId});
 
   newProduct.save()
     .then(() => res.json('Product added!'))

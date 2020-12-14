@@ -15,6 +15,21 @@ router.route('/').get(auth,(request,res) => {
       { error: err}
     ]});
 });
+router.route('/list/').get(auth,(request,res) => {
+  
+  Suply.find({userId:request.user.id})
+    .then(dataList => {
+      let suplierList=[]
+      for (data of dataList){
+          suplierList.push({value:data["_id"],label:data.name,color: "#7367f0"})
+      }
+            res.json({ data: suplierList })
+    })
+    .catch(err => {return [
+      200,
+      { error: err}
+    ]});
+});
 
 router.route('/initial').get((req, res) => {
   Suply.find()

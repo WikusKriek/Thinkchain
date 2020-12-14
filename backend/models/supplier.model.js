@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const supplierSchema = new Schema({
-  userId:{ type: String, required: true },
+  userId:{ type: mongoose.Schema.Types.ObjectId, required: true },
   tel: { type: Number, required: true },
   name: { type: String, required: true },
   contactName: { type: String, required: true },

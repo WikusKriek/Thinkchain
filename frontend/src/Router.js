@@ -24,6 +24,11 @@ const createSupplierGrid = lazy(() =>
 const createOrders = lazy(() =>
   import("./views/orders/StockOrders")
 )
+
+const newOrders = lazy(() =>
+  import("./views/orders/Edit/orders-edit")
+)
+
 const orderList = lazy(() =>
   import("./views/orders/OrderList")
 )
@@ -249,6 +254,11 @@ class AppRouter extends React.Component {
           <AppRoute
             path="/product-grid"
             component={createProductGrid}
+          />
+
+          <AppRoute
+            path="/createOrders/"
+            component={newOrders}
           />
 
           <AppRoute

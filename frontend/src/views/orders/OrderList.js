@@ -61,13 +61,7 @@ class UsersList extends React.Component {
         filter: true,
         checkboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
-        headerCheckboxSelection: true
-      },
-      {
-        headerName: "Supplier Name",
-        field: "supplierName",
-        filter: true,
-        width: 250,
+        headerCheckboxSelection: true,
         cellRendererFramework: params => {
           return (
             <div
@@ -75,17 +69,20 @@ class UsersList extends React.Component {
               onClick={() => history.push("/app/user/edit")}
             >
               
-              <span>{params.data.supplierName}</span>
+              <span>{params.data.orderId}</span>
             </div>
           )
         }
+        
       },
       {
         headerName: "Supplier Id",
         field: "supplierId",
         filter: true,
-        width: 250
+        width: 250,
+        
       },
+      
       {
         headerName: "Order Date",
         field: "orderDate",
@@ -119,6 +116,18 @@ class UsersList extends React.Component {
         }
       },
       {
+        headerName: "Paid",
+        field: "paid",
+        filter: true,
+        width: 200
+      },
+      {
+        headerName: "Recieved",
+        field: "paid",
+        filter: true,
+        width: 200
+      },
+      {
         headerName: "Actions",
         field: "transactions",
         width: 150,
@@ -141,7 +150,23 @@ class UsersList extends React.Component {
           )
         }
       }
-    ]
+    ],
+    defaultColDef: { flex: 1 },
+  groupDefaultExpanded: 1,
+  detailCellRendererParams: {
+    detailGridOptions: {
+      columnDefs: [
+        {
+          field: 'a2',
+          cellRenderer: 'agGroupCellRenderer',
+        },
+        { field: 'b2' },
+      ],
+    },
+    getDetailRowData: function (params) {
+      params.successCallback(params.data.children);
+    },
+  },
   }
 
   async componentDidMount() {
@@ -367,7 +392,7 @@ class UsersList extends React.Component {
                     <Button
                     className="add-new-btn"
                     color="primary"
-                    onClick={() => {}}
+                    onClick={() => {history.push("/createOrders/")}}
                     outline>
                     <Plus size={15} className="mr-50"/>
                     <span className="align-middle">Add New</span>
@@ -442,3 +467,6 @@ class UsersList extends React.Component {
 }
 
 export default UsersList
+
+
+

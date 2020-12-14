@@ -4,11 +4,63 @@ import { X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import classnames from "classnames"
 import axios from "axios"
+import Select from "react-select"
+import chroma from "chroma-js"
 
+
+const colourStyles = {
+  control: styles => ({ ...styles, backgroundColor: "white" }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    const color = data.color ? chroma(data.color) : "#7367f0"
+    return {
+      ...styles,
+      backgroundColor: isDisabled
+        ? null
+        : isSelected
+        ? data.color
+        : isFocused
+        ? color.alpha(0.1).css()
+        : null,
+      color: isDisabled
+        ? "#ccc"
+        : isSelected
+        ? chroma.contrast(color, "white") > 2
+          ? "white"
+          : "black"
+        : data.color,
+      cursor: isDisabled ? "not-allowed" : "default",
+
+      ":active": {
+        ...styles[":active"],
+        backgroundColor: !isDisabled && (isSelected ? data.color : "#7367f0")
+      }
+    }
+  },
+  multiValue: (styles, { data }) => {
+    const color = data.color ? chroma(data.color) : "#7367f0"
+    return {
+      ...styles,
+      backgroundColor: color.alpha(0.1).css()
+    }
+  },
+  multiValueLabel: (styles, { data }) => ({
+    ...styles,
+    color: data.color ? data.color : "#7367f0"
+  }),
+  multiValueRemove: (styles, { data }) => ({
+    ...styles,
+    color: data.color,
+    ":hover": {
+      backgroundColor: data.color ? data.color : "#7367f0",
+      color: "white"
+    }
+  })
+}
 
 class DataListSidebar extends Component {
   state = {
     _id:"",
+    supplier:"",
     name: "",
     number:"",
     con:"",
@@ -54,8 +106,8 @@ class DataListSidebar extends Component {
   
 
   render() {
-    let { show, handleSidebar, data } = this.props
-    let { number, name,packaging, qty, costPrice,salePrice,minQty,recQty, img,con,consign} = this.state
+    let { show, handleSidebar, data,suppliers } = this.props
+    let { number, name,packaging, qty, costPrice,salePrice,minQty,recQty, img,con,consign,supplier} = this.state
     return (
       <div
         className={classnames("data-list-sidebar", {
@@ -68,6 +120,23 @@ class DataListSidebar extends Component {
         <PerfectScrollbar
           className="data-list-fields px-2 mt-3"
           options={{ wheelPropagation: false }}>
+            <FormGroup >
+              <Label for="languages">Supplier</Label>
+              <Select
+              
+              onChange={e => this.setState({ supplierId: e.value })}
+              defaultValue={suppliers[0]}
+                
+                options={suppliers}
+               
+              styles={colourStyles}
+                className="React"
+                classNamePrefix="select"
+                id="languages"
+              >
+                
+              </Select>
+              </FormGroup>
           
           <FormGroup>
             <Label for="data-name">Number</Label>

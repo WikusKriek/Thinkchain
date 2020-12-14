@@ -14,7 +14,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.Circle size={10} />,
         navLink: "/",
-        permissions: ["admin", "editor"]
+        permissions: ["admin", "editor","user"]
       },
       {
         id: "eCommerceDash",
@@ -31,6 +31,7 @@ const horizontalMenuConfig = [
     title: "Apps",
     type: "dropdown",
     icon: <Icon.Grid size={16} />,
+    permissions: ["admin", "editor"],
     children: [
       {
         id: "email",
@@ -145,6 +146,7 @@ const horizontalMenuConfig = [
     title: "UI Elements",
     type: "dropdown",
     icon: <Icon.Layers size={16} />,
+    permissions: ["admin", "editor"],
     children: [
       {
         id: "dataView",
@@ -625,6 +627,7 @@ const horizontalMenuConfig = [
     title: "Forms & Tables",
     type: "dropdown",
     icon: <Icon.Edit3 size={16} />,
+    permissions: ["admin", "editor"],
     children: [
       {
         id: "formElements",
@@ -785,6 +788,7 @@ const horizontalMenuConfig = [
     title: "Pages",
     type: "dropdown",
     icon: <Icon.File size={16} />,
+    permissions: ["admin", "editor"],
     children: [
       {
         id: "profile",
@@ -836,7 +840,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.File size={16} />,
         navLink: "/pages/invoice",
-        permissions: ["admin", "editor"]
+        permissions: ["admin", "editor","user"]
       },
       {
         id: "authentication",
@@ -949,6 +953,7 @@ const horizontalMenuConfig = [
     title: "Charts & Maps",
     type: "dropdown",
     icon: <Icon.BarChart2 size={16} />,
+    permissions: ["admin", "editor"],
     children: [
       {
         id: "charts",
@@ -999,6 +1004,7 @@ const horizontalMenuConfig = [
     title: "Others",
     type: "dropdown",
     icon: <Icon.MoreHorizontal size={16} />,
+    permissions: ["admin", "editor"],
     children: [
       {
         id: "menuLevels",
@@ -1072,7 +1078,7 @@ const horizontalMenuConfig = [
     id: "Master_data",
     title: "Master Data",
     type: "dropdown",
-    icon: <Icon.Grid size={16} />,
+    icon: <Icon.Database size={16} />,
     permissions: ["admin", "editor","user"],
     children: [
       {
@@ -1081,24 +1087,24 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.Mail size={16} />,
         navLink: "/master-data/creat-product",
-        permissions: ["admin", "editor"]
+        permissions: ["admin", ]
       },
       
       {
         id: "create_product_grid",
         title: "Product Grid",
         type: "item",
-        icon: <Icon.Mail size={16} />,
+        icon: <Icon.List size={16} />,
         navLink: "/product-grid",
-        permissions: ["admin", "editor","user"]
+        permissions: ["admin","user"]
       },
       {
         id: "create_supplier_grid",
         title: "Supplier Grid",
         type: "item",
-        icon: <Icon.Mail size={16} />,
+        icon: <Icon.List size={16} />,
         navLink: "/supplier-grid",
-        permissions: ["admin", "editor","user"]
+        permissions: ["admin","user"]
       },
       {
         id: "create_supplier",
@@ -1106,7 +1112,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.Mail size={16} />,
         navLink: "/master-data/creat-supplier",
-        permissions: ["admin", "editor"]
+        permissions: ["admin", ]
       }
      ]
   },
@@ -1114,16 +1120,16 @@ const horizontalMenuConfig = [
     id: "Orders",
     title: "Orders",
     type: "dropdown",
-    icon: <Icon.Grid size={16} />,
-    permissions: ["admin", "editor","user"],
+    icon: <Icon.Truck size={16} />,
+    permissions: ["admin","user"],
     children: [
       {
         id: "view_orders",
         title: "Stock Orders",
         type: "item",
-        icon: <Icon.Mail size={16} />,
+        icon: <Icon.FolderPlus size={16} />,
         navLink: "/orders/",
-        permissions: ["admin", "editor","user"]
+        permissions: ["admin","user"]
       }
       ]
   }

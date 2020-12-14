@@ -1,8 +1,9 @@
 import React from "react"
-import { Row, Col } from "reactstrap"
+import { Row, Col,Button } from "reactstrap"
 import Breadcrumbs from "../../components/@vuexy/breadCrumbs/BreadCrumb"
 import StatisticsCard from "../../components/@vuexy/statisticsCard/StatisticsCard"
 import { Link } from "react-router-dom"
+import { history } from "../../history"
 import {
   Monitor,
   UserCheck,
@@ -19,7 +20,8 @@ import {
   Trash2,
   PenTool,
   Truck,
-  Check
+  Check,
+  Plus
 } from "react-feather"
 
 
@@ -36,6 +38,18 @@ draftclick(){
           breadCrumbActive="Statistics Cards"
         />
         <Row>
+        <Col  sm="12" className="mb-1">
+          <div className="table-input ml-1">
+                    <Button
+                    className="add-new-btn"
+                    color="primary"
+                    onClick={() => {history.push("/createOrders/")}}
+                    outline>
+                    <Plus size={15} className="mr-50"/>
+                    <span className="align-middle">Add New</span>
+                  </Button>
+                    </div>
+          </Col>
           <Col xl="3" lg="3" sm="6">
           <Link to="/orderslist/all">
             <StatisticsCard
@@ -77,6 +91,7 @@ draftclick(){
               statTitle="Completed Orders"
             />
           </Col>
+         
           
           
           

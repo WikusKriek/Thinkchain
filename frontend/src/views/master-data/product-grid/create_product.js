@@ -44,6 +44,7 @@ class AggridTable extends React.Component {
     rowsPerPage: 4,
     currentData: null,
     selected: [],
+    suppliers:[],
     totalRecords: 0,
     sortIndex: [],
     addNew: "",
@@ -138,7 +139,16 @@ class AggridTable extends React.Component {
       
     }).catch(err=>console.log(err))
   
-
+    
+    
+  
+     axios.get("http://localhost:5000/supplier/list/", config).then(response => {
+      let suppliers = response.data.data
+      JSON.stringify(suppliers)
+      this.setState({ suppliers })
+      
+      
+    }).catch(err=>console.log(err))
     
   }
   getrowdata(){
@@ -230,7 +240,7 @@ class AggridTable extends React.Component {
   }
 
   render() {
-    const { rowData, columnDefs, defaultColDef,sidebar } = this.state
+    const { rowData, columnDefs, defaultColDef,sidebar,suppliers } = this.state
     return (
       
       <div
@@ -245,6 +255,7 @@ class AggridTable extends React.Component {
           getData={this.props.getData}
           dataParams={this.props.parsedFilter}
           addNew={this.state.addNew}
+          suppliers={suppliers}
         />
         <div
           className={classnames("data-list-overlay", {

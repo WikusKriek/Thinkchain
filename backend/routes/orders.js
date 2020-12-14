@@ -58,9 +58,13 @@ router.route('/add').post(auth,(request, res) => {
   const supplierId = request.body.supplierId;
   const orderDate = request.body.orderDate;
   const status = request.body.status;
+  const paid = request.body.paid;
+  const recieved = request.body.recieved;
+  const products=request.body.products;
+
   
 
-  const newProduct = new Order({userId,orderId,supplierId,supplierName,orderDate,status});
+  const newProduct = new Order({userId,orderId,supplierId,supplierName,orderDate,status,paid,recieved,products});
 
   newProduct.save()
     .then(() => res.json('Order added!'))
@@ -89,6 +93,10 @@ router.route('/:id').get((req, res) => {
         orders.supplierId = request.body.supplierId;
         orders.orderDate = request.body.orderDate;
         orders.status = request.body.status;
+        orders.paid = request.body.paid;
+        orders.recieved = request.body.recieved;
+        orders.products =request.body.products;
+        
         
         orders.save()
           .then(() => res.json('Order updated!'))
