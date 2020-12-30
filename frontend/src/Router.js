@@ -9,6 +9,9 @@ import knowledgeBaseQuestion from "./views/pages/knowledge-base/Questions"
 import { ContextLayout } from "./utility/context/Layout"
 
 // Route-based code splitting
+const supplyOrder = lazy(() =>
+  import("./views/orders/supplyOrder")
+)
 const analyticsDashboard = lazy(() =>
   import("./views/dashboard/analytics/AnalyticsDashboard")
 )
@@ -242,6 +245,8 @@ class AppRouter extends React.Component {
       <Router history={history}>
         <Switch>
           <AppRoute exact path="/" component={analyticsDashboard} />
+
+          
           <AppRoute
             path="/ecommerce-dashboard"
             component={ecommerceDashboard}
@@ -273,6 +278,12 @@ class AppRouter extends React.Component {
             path="/orders/"
             component={createOrders}
           />
+          <AppRoute
+            path="/supplyOrder/"
+            exact
+            component={()=><Redirect to="/supplyOrder/empty" />}
+          />
+          <AppRoute path="/supplyOrder/:filter" component={supplyOrder} />
           <AppRoute
             path="/orderslist"
             exact

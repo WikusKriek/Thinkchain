@@ -22,7 +22,7 @@ const navigationConfig = [
         title: "eCommerce",
         type: "item",
         icon: <Icon.Circle size={12} />,
-        permissions: ["admin"],
+        permissions: ["admin","user"],
         navLink: "/ecommerce-dashboard"
       }
     ]
@@ -1077,7 +1077,17 @@ const navigationConfig = [
     newTab: true,
     permissions: ["admin", "editor"],
     navLink: "https://pixinvent.ticksy.com/"
+  },
+  {
+    id: "orderslist",
+    title: "Orders List",
+    icon: <Icon.LifeBuoy size={20} />,
+    type: "item",
+    newTab: true,
+    permissions: ["admin","user"],
+    navLink: "/orderslist/all"
   }
+
 ]
 
 export default navigationConfig

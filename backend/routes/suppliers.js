@@ -71,14 +71,18 @@ router.route('/add').post(auth,(request, res) => {
   const tel= request.body.tel;
   const name = request.body.name;
   const contactName = request.body.contactName;
-  const contactSurname = request.body.contactSurname;
   const email = request.body.email;
+  const city = request.body.city;
+  const country = request.body.country;
+  const addressLine = request.body.addressLine;
+  const taxNumber = request.body.taxNumber;
+
   
 
-  const newProduct = new Suply({userId,tel,name,contactName,contactSurname,email});
+  const newProduct = new Suply({userId,tel,name,contactName,email,city,country,addressLine,taxNumber});
 
   newProduct.save()
-    .then(() => res.json('Suplier added!'))
+    .then(() => res.json('Supplier added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
@@ -90,7 +94,7 @@ router.route('/:id').get((req, res) => {
   
   router.route('/:id').delete((req, res) => {
     Suply.findByIdAndDelete(req.params.id)
-      .then(() => res.json('Suply deleted.'))
+      .then(() => res.json('Supplier deleted.'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
   
@@ -102,11 +106,14 @@ router.route('/:id').get((req, res) => {
         supplier.tel= request.body.tel;
         supplier.name = request.body.name;
         supplier.contactName = request.body.contactName;
-        supplier.contactSurname = request.body.contactSurname;
         supplier.email = request.body.email;
+        supplier.country =request.body.country;
+        supplier.city = request.body.city;
+        supplier.addressLine = request.body.addressLine;
+        supplier.taxNumber = request.body.taxNumber;
         
         supplier.save()
-          .then(() => res.json('Suplier updated!'))
+          .then(() => res.json('Supplier updated!'))
           .catch(err => res.status(400).json('Error: ' + err));
       })
       .catch(err => res.status(400).json('Error: ' + err));

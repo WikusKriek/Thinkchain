@@ -48,6 +48,11 @@ class FormValidation extends React.Component {
               maxlength: ""
             }}
             validationSchema={formSchema}
+            onSubmit={values => {
+              console.log(values);
+              
+              
+            }}
           >
             {({ errors, touched }) => (
               <Form>

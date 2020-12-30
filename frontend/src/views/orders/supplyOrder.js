@@ -11,17 +11,71 @@ import {
   InputGroupAddon,
   Button
 } from "reactstrap"
-import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb"
-import logo from "../../../assets/img/logo/logo.png"
-import { Mail, Phone, FileText, Download } from "react-feather"
+import Breadcrumbs from "../../components/@vuexy/breadCrumbs/BreadCrumb"
+import logo from "../../assets/img/logo/logo.png"
+import { Mail, Phone, FileText, Download,DollarSign } from "react-feather"
 import axios from "axios"
 
 
-import "../../../assets/scss/pages/invoice.scss"
+import "../../assets/scss/pages/invoice.scss"
 
 class Invoice extends React.Component {
+  state = {
+    items:[],
+     rowData:{supplierId:{
+       name:"",
+       email:"",
+       contactName:"",
+       contactSurname:"",
+       city:"",
+       country:"",
+       taxNumber:""
+     }},
+    currentFilter: this.props.match.params.filter
+  }
+  async componentDidMount() {
+    const token=localStorage.getItem('token')
+ 
+    const config={
+      headers:{
+        'content-type':"application/json"
+      }
+    }
+    if (token){
+      config.headers['x-auth-token']=token;
+      
+    }
   
+     await axios.get("http://localhost:5000/orders/"+this.state.currentFilter, config).then(response => {
+      let rowData = response.data.data
+      JSON.stringify(rowData)
+      this.setState({ rowData })
+      let items=[];
+      let total=0;
+      for (var product of rowData.products){
+        total=total+product.subtotal;
+        items.push(<tr key={product.product["_id"]}>
+          <td>{product.product.name}</td>
+          <td>{product.qty}</td>
+          <td>{product.product.costPrice}</td>
+          <td>{product.subtotal}</td>
+        </tr>)
+      }
+      this.setState({items})
+      this.setState({total})
+    }).catch(err=>console.log(err))
+  }
   render() {
+    console.log(this.state.rowData)
+    const {products,supplierId,orderId}=this.state.rowData;
+    const {items,total} =this.state;
+    const date= new Date().toDateString();
+    const imgStyle = {
+      maxHeight: 300,
+      maxWidth: 300
+    }
+    
+    
     return (
       <React.Fragment>
         <Breadcrumbs
@@ -48,7 +102,9 @@ class Invoice extends React.Component {
             <Button
               className="mr-1 mb-md-0 mb-1"
               color="primary"
-              onClick={() => window.print()}
+              onClick={() =>{
+                document.title='Order-'+orderId
+                 window.print()}}
             >
               <FileText size="15" />
               <span className="align-middle ml-50">Print</span>
@@ -63,37 +119,43 @@ class Invoice extends React.Component {
               <CardBody>
                 <Row>
                   <Col md="6" sm="12" className="pt-1">
-                    <Media className="pt-1">
-                      <img src={logo} alt="logo" />
+                    <Media className="pt-1" >
+                      <img src="https://i1.wp.com/hambahealth.com/wp-content/uploads/2020/04/cropped-Website-Header-2.png?fit=797%2C167&ssl=1" alt="logo" style={imgStyle}/>
                     </Media>
                   </Col>
                   <Col md="6" sm="12" className="text-right">
                     <h1>Invoice</h1>
                     <div className="invoice-details mt-2">
                       <h6>INVOICE NO.</h6>
-                      <p>001/2020</p>
+                      <p>{orderId}</p>
                       <h6 className="mt-2">INVOICE DATE</h6>
-                      <p>10 Dec 2018</p>
+                      <p>{date}</p>
                     </div>
                   </Col>
                 </Row>
                 <Row className="pt-2">
                   <Col md="6" sm="12">
                     <h5>Recipient</h5>
+                    
                     <div className="recipient-info my-2">
-                      <p>Peter Stark</p>
-                      <p>8577 West West Drive</p>
-                      <p>Holbrook, NY</p>
-                      <p>90001</p>
+                    <h6>{supplierId.name}</h6>
+                      <p>{supplierId.contactName}</p>
+                      <p>{supplierId.addressLine}</p>
+                      <p>{supplierId.country}</p>
+                      <p>{supplierId.city}</p>
                     </div>
                     <div className="recipient-contact pb-2">
                       <p>
                         <Mail size={15} className="mr-50" />
-                        peter@mail.com
+                        {supplierId.email}
                       </p>
                       <p>
                         <Phone size={15} className="mr-50" />
-                        +91 988 888 8888
+                        {supplierId.tel}
+                      </p>
+                      <p>
+                        <DollarSign size={15} className="mr-50" />
+                        {"Tax Num: "+supplierId.taxNumber}
                       </p>
                     </div>
                   </Col>
@@ -122,25 +184,13 @@ class Invoice extends React.Component {
                       <Table responsive borderless>
                         <thead>
                           <tr>
-                            <th>TASK DESCRIPTION</th>
-                            <th>HOURS</th>
-                            <th>RATE</th>
+                            <th>PRODUCT</th>
+                            <th>QTY</th>
+                            <th>PRICE</th>
                             <th>AMOUNT</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <td>Website Redesign</td>
-                            <td>60</td>
-                            <td>15 USD</td>
-                            <td>90000 USD</td>
-                          </tr>
-                          <tr>
-                            <td>Newsletter template design</td>
-                            <td>20</td>
-                            <td>12 USD</td>
-                            <td>24000 USD</td>
-                          </tr>
+                        <tbody>{items}
                         </tbody>
                       </Table>
                     </Col>
@@ -154,17 +204,10 @@ class Invoice extends React.Component {
                     >
                       <Table responsive borderless>
                         <tbody>
-                          <tr>
-                            <th>SUBTOTAL</th>
-                            <td>114000 USD</td>
-                          </tr>
-                          <tr>
-                            <th>DISCOUNT (5%)</th>
-                            <td>5700 USD</td>
-                          </tr>
+                          
                           <tr>
                             <th>TOTAL</th>
-                            <td>108300 USD</td>
+                            <td>R {total}</td>
                           </tr>
                         </tbody>
                       </Table>

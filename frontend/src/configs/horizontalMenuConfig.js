@@ -40,7 +40,7 @@ const horizontalMenuConfig = [
         icon: <Icon.Mail size={16} />,
         navLink: "/email/:filter",
         filterBase: "/email/inbox",
-        permissions: ["admin", "editor"]
+        permissions: ["admin"]
       },
       {
         id: "chat",
@@ -1130,6 +1130,7 @@ const horizontalMenuConfig = [
         icon: <Icon.FolderPlus size={16} />,
         navLink: "/orders/",
         permissions: ["admin","user"]
+        
       }
       ]
   }

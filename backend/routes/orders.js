@@ -6,14 +6,18 @@ const auth =require('../middleware/auth');
 router.route('/').get(auth,(request,res) => {
   
   Order.find({userId:request.user.id})
-    .then(dataList => {
+  .populate({path:'supplierId'}).
+  populate ({ path:'products.product'})
+    .exec((error,dataList) => {
       
-            res.json({ data: dataList })
+            
+            if (error) { 
+              console.log(error);}
+            else{
+            res.json({ data: dataList });
+            }
     })
-    .catch(err => {return [
-      200,
-      { error: err}
-    ]});
+    
 });
 
 router.route('/initial').get((req, res) => {
@@ -53,7 +57,6 @@ router.route('/add-data').get((request, res) => {
 
 router.route('/add').post(auth,(request, res) => {
   const userId= request.user.id;
-  const orderId= request.body.orderId;
   const supplierName = request.body.supplierName;
   const supplierId = request.body.supplierId;
   const orderDate = request.body.orderDate;
@@ -61,20 +64,57 @@ router.route('/add').post(auth,(request, res) => {
   const paid = request.body.paid;
   const recieved = request.body.recieved;
   const products=request.body.products;
-
+  var orderId='0'
+ Order.find()
+ .select("orderId")
+ .sort([["orderId",-1]] )
+ .limit(1)
+ .exec((error,entry)=>{
+   
+  var year=new Date().getFullYear()
+   if(entry[0]){
+  var id=entry[0].orderId
   
+  if(id){
+    var number=parseInt(id.split("/"));
+    if (number) { 
+      number=number+1
+       orderId= number.toString()+"/"+year;
+    }
+  
+  
+  }
+    else{
+      orderId= "1/"+year;
+  }
+  }else{
+  orderId= "1/"+year;
+  }
 
-  const newProduct = new Order({userId,orderId,supplierId,supplierName,orderDate,status,paid,recieved,products});
+const newProduct = new Order({userId,orderId,supplierId,supplierName,orderDate,status,paid,recieved,products});
 
   newProduct.save()
     .then(() => res.json('Order added!'))
     .catch(err => res.status(400).json('Error: ' + err));
+ });
+  
+
+ 
 });
 
 router.route('/:id').get((req, res) => {
     Order.findById(req.params.id)
-      .then(orders => res.json(orders))
-      .catch(err => res.status(400).json('Error: ' + err));
+    .populate({path:'supplierId'}).
+    populate ({ path:'products.product'})
+      .exec((error,dataList) => {
+        
+              
+              if (error) { 
+                console.log(error);}
+              else{
+              res.json({ data: dataList });
+              }
+      })
   });
   
   router.route('/:id').delete((req, res) => {

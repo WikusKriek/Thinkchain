@@ -224,13 +224,14 @@ class UserInfoTab extends React.Component {
 
   handleSaveOrder=obj=>{
     var status=""
+    console.log(obj)
     if (obj.paid &&obj.recieved){
         status="completed"
     }else{
       status="progress"
     }
   var order={
-    orderId:obj.reference,
+    reference:obj.reference,
     supplierId:obj.supplier,
     orderDate:obj.orderdate,
     status,
@@ -349,8 +350,8 @@ class UserInfoTab extends React.Component {
                   icon={<Check className="vx-icon" size={16} />}
                   label="Paid"
                   defaultChecked={false}
-                  value={this.state.paid}
-                  onChange={e => this.setState({paid:e.target.value})}
+                  
+                  onChange={e => this.setState({paid:e.target.checked})}
                 />
               </div>
               <div className="d-inline-block mr-1">
@@ -358,9 +359,9 @@ class UserInfoTab extends React.Component {
                   color="primary"
                   icon={<Check className="vx-icon" size={16} />}
                   label="Recieved"
-                  value={this.state.recieved}
+                  
                   defaultChecked={false}
-                  onChange={e => this.setState({recieved:e.target.value})}
+                  onChange={e => this.setState({recieved:e.target.checked})}
                 />
               </div>
               

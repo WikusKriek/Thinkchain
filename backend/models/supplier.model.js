@@ -7,8 +7,11 @@ const supplierSchema = new Schema({
   tel: { type: Number, required: true },
   name: { type: String, required: true },
   contactName: { type: String, required: true },
-  contactSurname: { type: String, required: true },
+  city: { type: String, required: true },
   email: { type: String, required: true },
+  country: { type: String, required: true },
+  addressLine: { type: String, required: true },
+  taxNumber: { type: Number, required: true },
   
 
 }, {

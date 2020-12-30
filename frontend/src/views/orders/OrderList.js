@@ -30,7 +30,8 @@ import {
   Printer,
   Download,
   RotateCw,
-  X
+  X,
+  Send
 } from "react-feather"
 import classnames from "classnames"
 import { history } from "../../history"
@@ -66,10 +67,10 @@ class UsersList extends React.Component {
           return (
             <div
               className="d-flex align-items-center cursor-pointer"
-              onClick={() => history.push("/app/user/edit")}
+              onClick={() => history.push("/supplyOrder/"+params.data["_id"])}
             >
               
-              <span>{params.data.orderId}</span>
+              <span>{params.data["orderId"]}</span>
             </div>
           )
         }
@@ -77,7 +78,7 @@ class UsersList extends React.Component {
       },
       {
         headerName: "Supplier Id",
-        field: "supplierId",
+        field: "supplierId.name",
         filter: true,
         width: 250,
         
@@ -96,7 +97,7 @@ class UsersList extends React.Component {
         filter: true,
         width: 150,
         cellRendererFramework: params => {
-          return params.value === "complete" ? (
+          return params.value === "completed" ? (
             <div className="badge badge-pill badge-light-success">
               {params.value}
             </div>
@@ -123,7 +124,7 @@ class UsersList extends React.Component {
       },
       {
         headerName: "Recieved",
-        field: "paid",
+        field: "recieved",
         filter: true,
         width: 200
       },
@@ -140,10 +141,20 @@ class UsersList extends React.Component {
                 onClick={() => history.push("/app/user/edit")}
               />
               <Trash2
+              className="mr-50"
                 size={15}
                 onClick={() => {
                   let selectedData = this.gridApi.getSelectedRows()
                   this.gridApi.updateRowData({ remove: selectedData })
+                }}
+              />
+              <Send
+              className="mr-50"
+                size={15}
+                onClick={() => {
+                  console.log(params)
+                  history.push("/supplyOrder/"+params.data["_id"])
+                
                 }}
               />
             </div>
@@ -268,7 +279,7 @@ class UsersList extends React.Component {
           breadCrumbParent="Stock Orders"
           breadCrumbActive="Draft Orders"
         />
-      <Row className="app-user-list">
+       <Row className="app-user-list">
         <Col sm="12">
           <Card
             className={classnames("card-action card-reload", {
@@ -335,7 +346,7 @@ class UsersList extends React.Component {
                         }}
                       >
                         <option value="All">all</option>
-                        <option value="complete">Completed</option>
+                        <option value="completed">Completed</option>
                         <option value="draft">Draft</option>
                         <option value="progress">Progress</option>
                         <option value="deleted">Deleted</option>

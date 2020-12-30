@@ -19,12 +19,15 @@ connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
 })
 
+const emailRouter = require('./routes/email');
 const ordersRouter = require('./routes/orders');
 const supplierRouter = require('./routes/suppliers');
 const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 
+
+app.use('/email', emailRouter);
 app.use('/supplier', supplierRouter);
 app.use('/orders', ordersRouter);
 app.use('/products', productsRouter);
