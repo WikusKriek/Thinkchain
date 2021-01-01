@@ -11,6 +11,8 @@ import {
   Col
 } from "reactstrap"
 import img from "../../../assets/img/portrait/small/avatar-s-11.jpg"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee ,faUser} from '@fortawesome/free-solid-svg-icons'
 class General extends React.Component {
   state = {
     visible: true
@@ -23,18 +25,12 @@ class General extends React.Component {
   }
 
   render() {
+    let {values}=this.props
     return (
       <React.Fragment>
         <Media>
           <Media className="mr-1" left href="#">
-            <Media
-              className="rounded-circle"
-              object
-              src={img}
-              alt="User"
-              height="64"
-              width="64"
-            />
+          <FontAwesomeIcon icon={faUser} size="3x"/>
           </Media>
           <Media className="mt-25" body>
             <div className="d-flex flex-sm-row flex-column justify-content-start px-0">
@@ -52,28 +48,23 @@ class General extends React.Component {
             <p className="text-muted mt-50">
               <small>Allowed JPG, GIF or PNG. Max size of 800kB</small>
             </p>
-          </Media>
+    </Media>
         </Media>
         <Form className="mt-2" onSubmit={e => e.preventDefault()}>
           <Row>
             <Col sm="12">
               <FormGroup>
                 <Label for="userName">Username</Label>
-                <Input id="userName" defaultValue="johny_01" />
-              </FormGroup>
-            </Col>
-            <Col sm="12">
-              <FormGroup>
-                <Label for="name">Name</Label>
-                <Input id="name" defaultValue="John Doe" />
+                <Input id="userName" defaultValue={values.loggedInUser.username} />
               </FormGroup>
             </Col>
             <Col sm="12">
               <FormGroup>
                 <Label for="email">Email</Label>
-                <Input id="email" defaultValue="john@admin.com" />
+                <Input id="email" defaultValue={values.loggedInUser.email} />
               </FormGroup>
             </Col>
+            {/*
             <Col sm="12">
               <Alert
                 className="mb-2"
@@ -87,12 +78,13 @@ class General extends React.Component {
                 </p>
               </Alert>
             </Col>
+            */}
             <Col sm="12">
               <FormGroup>
                 <Label for="company">Company</Label>
                 <Input
                   id="company"
-                  defaultValue="SnowMash Technologies Pvt Ltd"
+                  defaultValue={values.loggedInUser.companyId.companyName}
                 />
               </FormGroup>
             </Col>

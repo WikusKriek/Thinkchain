@@ -24,6 +24,7 @@ const ordersRouter = require('./routes/orders');
 const supplierRouter = require('./routes/suppliers');
 const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
+const companyRouter = require('./routes/company');
 const authRouter = require('./routes/auth');
 
 
@@ -32,6 +33,7 @@ app.use('/supplier', supplierRouter);
 app.use('/orders', ordersRouter);
 app.use('/products', productsRouter);
 app.use('/users', usersRouter);
+app.use('/company', companyRouter);
 app.use('/auth', authRouter);
 
 app.listen(port, () => {

@@ -290,7 +290,7 @@ class AppRouter extends React.Component {
             component={() => <Redirect to="/orders/all" />}
           />
           <AppRoute
-            path="/orderslist/"
+            path="/orderslist/:filter"
             component={orderList}
           />
           <AppRoute

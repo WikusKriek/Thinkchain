@@ -234,12 +234,12 @@ class AggridTable extends React.Component {
           rowData.push(obj)
           this.setState({ rowData })
           this.gridApi.setRowData(rowData)
-          toast.success(response.data)
+          toast.success(response.data.msg)
           
         this.toggleModal()
       }else{
         
-          toast.error(response.data)
+          toast.error(response.data.msg)
           
       }
       })

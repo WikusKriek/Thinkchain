@@ -27,8 +27,14 @@ const userSchema = new Schema({
     required: true,
     trim: true,
     minlength: 3
-  }
-}, {
+  },
+  companyId:{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    required: true ,
+    ref:"Company"
+  },
+}, 
+{
   timestamps: true,
 });
 

@@ -8,6 +8,7 @@ import { Row, Col, Button, Form, Input, Label, FormGroup,Card,
 import Checkbox from "../../../components/@vuexy/checkbox/CheckboxesVuexy"
 import Radio from "../../../components/@vuexy/radio/RadioVuexy"
 import { Check, User, MapPin,Truck,Package,Plus,Trash } from "react-feather"
+import { ToastContainer, toast } from "react-toastify"
 import Select from "react-select"
 import chroma from "chroma-js"
 import Flatpickr from "react-flatpickr";
@@ -21,19 +22,13 @@ import { AgGridReact } from "ag-grid-react"
 import { ContextLayout } from "../../../utility/context/Layout"
 import { ChevronDown } from "react-feather"
 import axios from "axios"
+import SweetAlert from 'react-bootstrap-sweetalert';
 
+import "react-toastify/dist/ReactToastify.css"
 import "../../../assets/scss/plugins/tables/_agGridStyleOverride.scss"
 
-import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb"
 
 
-const languages = [
-  { value: "english", label: "English", color: "#7367f0" },
-  { value: "french", label: "French", color: "#7367f0" },
-  { value: "spanish", label: "Spanish", color: "#7367f0" },
-  { value: "russian", label: "Russian", color: "#7367f0" },
-  { value: "italian", label: "Italian", color: "#7367f0" }
-]
 
 const colourStyles = {
   control: styles => ({ ...styles, backgroundColor: "white" }),
@@ -83,9 +78,13 @@ const colourStyles = {
     }
   })
 }
-class UserInfoTab extends React.Component {
+class EditOrderForm extends React.Component {
   state = {
     orderdate: new Date(),
+    defaultAlert : false, 
+   confirmAlert : false, 
+   cancelAlert : false,
+   supplierDidChange:"",
     rowData: [],
     suppliers:[],
     products:[],
@@ -95,7 +94,7 @@ class UserInfoTab extends React.Component {
     paid:false,
     recieved:false,
       
-      vat:"",
+      vat:15,
       qty:1,
     
     
@@ -111,7 +110,7 @@ class UserInfoTab extends React.Component {
       {
         headerName: "Product Number",
         field: "number",
-        width: 175,
+        minWidth: 175,
         filter: true,
         checkboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
@@ -122,32 +121,32 @@ class UserInfoTab extends React.Component {
         headerName: "Product Name",
         field: "name",
         filter: true,
-        width: 175
+        minWidth: 175
       },
       {
         headerName: "Cost Price",
         field: "costPrice",
         filter: true,
-        width: 250,
+        minWidth: 250,
         
       },
       {
         headerName: "Qty",
         field: "qty",
         filter: true,
-        width: 250
+        minWidth: 250
       },
       {
         headerName: "Vat",
         field: "vat",
         filter: true,
-        width: 150
+        minWidth: 150
       },
       {
         headerName: "Sub Total",
         field: "subtotal",
         filter: true,
-        width: 150
+        minWidth: 150
       }
      
     ]
@@ -173,7 +172,18 @@ class UserInfoTab extends React.Component {
       
     }).catch(err=>console.log(err))
 
+
+    axios.get("http://localhost:5000/products/supplier/"+this.props.order.supplierId["_id"], config).then(response => {
+      let products = response.data.data
+      console.log(products)
+      JSON.stringify(products)
+      this.setState( {products})
+      
+      
+    }).catch(err=>console.log(err))
     
+    this.setState({supplier:{value:this.props.order.supplierId["_id"], label:this.props.order.supplierId.name}})
+    this.setState({paid:this.props.order.paid,recieved:this.props.order.recieved,status:this.props.order.status})
 
   }
 
@@ -182,33 +192,16 @@ class UserInfoTab extends React.Component {
     this.gridColumnApi = params.columnApi
     
     this.gridApi.sizeColumnsToFit()
+    this.setRowData();
   }
 
   updateSearchQuery = val => {
     this.gridApi.setQuickFilter(val)
   }
   handleSupplierChange(event) {
-    this.setState( {supplier:event.value})
-    const token=localStorage.getItem('token')
- 
-    const config={
-      headers:{
-        'content-type':"application/json"
-      }
-    }
-    if (token){
-      config.headers['x-auth-token']=token;
-      
-    }
-  
-      axios.get("http://localhost:5000/products/supplier/"+event.value, config).then(response => {
-      let products = response.data.data
-      console.log(products)
-      JSON.stringify(products)
-      this.setState( {products})
-      
-      
-    }).catch(err=>console.log(err))
+    this.setState( {supplierDidChange:{value:event.value,label:event.label}})
+    this.handleAlert("defaultAlert", true)
+   
 
   }
 
@@ -222,13 +215,63 @@ class UserInfoTab extends React.Component {
     }
   }
 
-  handleSaveOrder=obj=>{
-    var status="draft"
+  handleCreateOrder=obj=>{
+    var status=""
     console.log(obj)
-    
+    if (obj.paid &&obj.recieved){
+        status="completed"
+    }else{
+      status="progress"
+    }
   var order={
     reference:obj.reference,
-    supplierId:obj.supplier,
+    supplierId:obj.supplier.value,
+    orderDate:obj.orderdate,
+    status,
+    paid:obj.paid,
+    recieved:obj.recieved,
+    products:obj.rowData
+  }
+  const token=localStorage.getItem('token')
+ 
+    const config={
+      headers:{
+        'content-type':"application/json"
+      }
+    }
+    if (token){
+      config.headers['x-auth-token']=token;
+    }
+  
+    
+    //let params = getState().dataList.params
+     axios
+      .post("http://localhost:5000/orders/update/"+this.props.order['_id'],order,config
+      )
+      .then(response => {
+        console.log(response)
+        //dispatch(getData(params))
+      })
+      
+  }
+
+  handleUpdateOrder=obj=>{
+    var status="draft"
+    console.log(obj)
+    if (this.state.status!="draft"){
+      if (!(obj.paid &&obj.recieved)){
+        status="progress"
+      }else if (obj.paid &&obj.recieved){
+        status="completed"
+    }else{
+      status="draft"
+    }
+  }else{
+    status="draft"
+  }
+  var order={
+    reference:obj.reference,
+    supplierId:obj.supplier.value,
     orderDate:obj.orderdate,
     status,
     paid:obj.paid,
@@ -250,13 +293,59 @@ class UserInfoTab extends React.Component {
     
     //let params = getState().dataList.params
      axios
-      .post("http://localhost:5000/orders/add/",order,config
+      .post("http://localhost:5000/orders/update/"+this.props.order['_id'],order,config
       )
       .then(response => {
         console.log(response)
         //dispatch(getData(params))
       })
       
+  }
+
+  handleAlert = (state, value) => {
+    this.setState({ [state] : value })
+    if(state=='confirmAlert'){
+      this.setState({rowData:[]})
+      this.gridApi.setRowData([])
+      this.setState( {supplier:this.state.supplierDidChange})
+      const token=localStorage.getItem('token')
+   
+      const config={
+        headers:{
+          'content-type':"application/json"
+        }
+      }
+      if (token){
+        config.headers['x-auth-token']=token;
+        
+      }
+    
+        axios.get("http://localhost:5000/products/supplier/"+this.state.supplier.value, config).then(response => {
+        let products = response.data.data
+        console.log(products)
+        JSON.stringify(products)
+        this.setState( {products})
+        
+        
+      }).catch(err=>console.log(err))
+    }
+  }
+
+  setRowData(){
+    let data=[]
+    console.log(this.props)
+    for( let product of this.props.order.products){
+      console.log(product)
+      if(product.product!=null){
+      data.push({product:product.product['_id'],number:product.product.number,name:product.product.name,qty:product.qty,vat:product.vat,subtotal:product.subtotal,costPrice:product.product.costPrice})
+    }else{
+      toast.error("One or more products no longer exist!", {
+        position: toast.POSITION.TOP_CENTER
+      });
+    }
+  }
+    this.gridApi.setRowData(data);
+    this.setState({rowData:data})
   }
 
   handleaddproduct=p=>{
@@ -273,17 +362,24 @@ class UserInfoTab extends React.Component {
       orderdate: date
     })
   }
+
+
   render() {
     const { rowData, columnDefs, defaultColDef,suppliers,products } = this.state
+    const {order}=this.props
+    var supplierId=this.props.order.supplierId
+    if(supplierId==null){
+      toast.error("The supplier of this order no longer exists!", {
+        position: toast.POSITION.TOP_CENTER
+      });
+      supplierId={name:"",number:"",contactName:"","_id":""}
+    }
+    console.log(order);
     return (
       
       
       <React.Fragment>
-        <Breadcrumbs
-          breadCrumbTitle="Stock Order New"
-          breadCrumbParent="Stock Order"
-          breadCrumbActive="New"
-        />
+        
       <Form onSubmit={e => e.preventDefault()}>
       <h5 className="mb-1">
               <Truck className="mr-50" size={16} />
@@ -296,12 +392,11 @@ class UserInfoTab extends React.Component {
             <FormGroup >
               <Label for="languages">Supplier</Label>
               <Select
-              
               onChange={this.handleSupplierChange.bind(this)}
-              defaultValue={suppliers[0]}
+              defaultValue={{value:supplierId["_id"], label:supplierId.name}}
                 styles={colourStyles}
                 options={suppliers}
-                
+                value={this.state.supplier}
                 className="React"
                 classNamePrefix="select"
                 id="languages"
@@ -313,6 +408,7 @@ class UserInfoTab extends React.Component {
                 type="text"
                 id="contactnumber"
                 placeholder="Contact Number"
+                defaultValue={order.supplierId.contactName}
                 onChange={e => this.setState({reference:e.target.value})}
               />
             
@@ -329,7 +425,7 @@ class UserInfoTab extends React.Component {
                 id="dob"
                 className="form-control"
                 options={{ dateFormat: "Y-m-d" }}
-                value={this.state.orderdate}
+                value={order.orderDate}
                 onChange={date => this.handleorderdate(date)}
               />
             </FormGroup>
@@ -345,7 +441,7 @@ class UserInfoTab extends React.Component {
                   color="primary"
                   icon={<Check className="vx-icon" size={16} />}
                   label="Paid"
-                  defaultChecked={false}
+                  defaultChecked={order.paid}
                   
                   onChange={e => this.setState({paid:e.target.checked})}
                 />
@@ -356,7 +452,7 @@ class UserInfoTab extends React.Component {
                   icon={<Check className="vx-icon" size={16} />}
                   label="Recieved"
                   
-                  defaultChecked={false}
+                  defaultChecked={order.recieved}
                   onChange={e => this.setState({recieved:e.target.checked})}
                 />
               </div>
@@ -411,7 +507,7 @@ class UserInfoTab extends React.Component {
                 onChange={e => this.setState({ vat: e.target.value })}
               />
             </FormGroup>
-              
+            <ToastContainer /> 
           </Col>
 
           
@@ -467,6 +563,52 @@ class UserInfoTab extends React.Component {
                   </div>
                  
                 </div>
+
+                <SweetAlert title="Are you sure?" 
+                  warning
+                  show={this.state.defaultAlert}
+                  showCancel
+                  reverseButtons
+                  cancelBtnBsStyle="danger"
+                  confirmBtnText="Yes, delete it!"
+                  cancelBtnText="Cancel"
+                  onConfirm={() => {
+                    this.handleAlert("basicAlert", false)
+                    this.handleAlert("confirmAlert", true)
+                  }}
+                  onCancel={() => {
+                    this.handleAlert("basicAlert", false)
+                    this.handleAlert("cancelAlert", true)
+                  }}
+                >
+                  Changing the supplier will delete the current products!
+                </SweetAlert>
+
+                <SweetAlert success title="Deleted!" 
+                  confirmBtnBsStyle="success"
+                  show={this.state.confirmAlert} 
+                  onConfirm={() => {
+                    this.handleAlert("defaultAlert", false)
+                    this.handleAlert("confirmAlert", false)
+                  }}
+                >
+                    <p className="sweet-alert-text">Your supplier has been changed.</p>
+                </SweetAlert>
+
+                <SweetAlert error title="Cancelled" 
+                  confirmBtnBsStyle="success"
+                  show={this.state.cancelAlert} 
+                  onConfirm={() =>{
+                    this.handleAlert("defaultAlert", false)
+                    this.handleAlert("cancelAlert", false)
+                  }}
+                >
+                    <p className="sweet-alert-text">
+                      Your supplier information is safe! :)
+                    </p>
+                  </SweetAlert>
+
+
                 <ContextLayout.Consumer>
                   {context => (
                     <AgGridReact
@@ -492,19 +634,20 @@ class UserInfoTab extends React.Component {
           </Card>
           </Col>
           <Col className="d-flex justify-content-end flex-wrap" sm="12">
+          <Button.Ripple className="mr-1"
+             color="primary"
+             onClick={() => this.handleCreateOrder(this.state)}
+             >
+              Create order
+            </Button.Ripple>
           
             <Button.Ripple className="mr-1"
              color="primary"
-             onClick={() => this.handleSaveOrder(this.state)}
+             onClick={() => this.handleUpdateOrder(this.state)}
              >
               Save Changes
             </Button.Ripple>
-            <Button.Ripple className="mr-1" color="flat-warning" type="reset">
-              Reset
-            </Button.Ripple>
-            <Button.Ripple className="mr-1" color="flat-danger" onClick={() => {history.push("/orders/")}}>
-              Discard
-            </Button.Ripple>
+            
           </Col>
         </Row>
       </Form>
@@ -512,7 +655,7 @@ class UserInfoTab extends React.Component {
     )
   }
 }
-export default UserInfoTab
+export default EditOrderForm
 
 
 

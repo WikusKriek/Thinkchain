@@ -2,6 +2,10 @@ import React from "react"
 import { Button, FormGroup, Row, Col } from "reactstrap"
 import { Formik, Field, Form } from "formik"
 import * as Yup from "yup"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
+import axios from "axios"
 const formSchema = Yup.object().shape({
   oldpass: Yup.string().required("Required"),
   newpass: Yup.string().required("Required"),
@@ -10,7 +14,9 @@ const formSchema = Yup.object().shape({
     .required("Required")
 })
 class ChangePassword extends React.Component {
+  
   render() {
+    let {values}=this.props
     return (
       <React.Fragment>
         <Row className="pt-1">
@@ -21,14 +27,41 @@ class ChangePassword extends React.Component {
                 newpass: "",
                 confirmpass: ""
               }}
+              onSubmit={val=>{
+                const token=localStorage.getItem('token')
+ 
+                    const config={
+                      headers:{
+                        'content-type':"application/json"
+                      }
+                    }
+                    if (token){
+                      config.headers['x-auth-token']=token;
+                      
+                    }
+                   axios
+                    .post("http://localhost:5000/users/updatePassword/",val, config
+                    
+                    )
+                    .then(response => {
+                      if(response.status==200){
+                    toast.success(response.data)
+                      }else{
+                        toast.error(response.data) 
+                      }
+                    }).catch(err=>console.log(err))
+              }}
               validationSchema={formSchema}
             >
               {({ errors, touched }) => (
                 <Form>
+                  <ToastContainer />
+                  
                   <FormGroup>
                     <Field
                       name="oldpass"
                       id="oldpass"
+                      type={values.showPassword ? 'text' : 'password'}
                       className={`form-control ${errors.oldpass &&
                         touched.oldpass &&
                         "is-invalid"}`}
@@ -43,6 +76,7 @@ class ChangePassword extends React.Component {
                       name="newpass"
                       placeholder="New Password"
                       id="newpass"
+                      type={values.showPassword ? 'text' : 'password'}
                       className={`form-control ${errors.newpass &&
                         touched.newpass &&
                         "is-invalid"}`}
@@ -55,6 +89,7 @@ class ChangePassword extends React.Component {
                     <Field
                       name="confirmpass"
                       id="confirmpass"
+                      type={values.showPassword ? 'text' : 'password'}
                       className={`form-control ${errors.confirmpass &&
                         touched.confirmpass &&
                         "is-invalid"}`}

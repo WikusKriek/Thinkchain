@@ -116,10 +116,26 @@ router.route('/:id').get((req, res) => {
               }
       })
   });
+
+  router.route('/ordersByStatus/').post(auth,(request, res) => {
+    Order.find({userId:request.user.id})
+    .where("status").equals(request.body.status)
+  .populate({path:'supplierId'}).
+  populate ({ path:'products.product'})
+    .exec((error,dataList) => {
+      
+            
+            if (error) { 
+              console.log(error);}
+            else{
+            res.json({ data: dataList });
+            }
+    })
+  });
   
   router.route('/:id').delete((req, res) => {
     Order.findByIdAndDelete(req.params.id)
-      .then(() => res.json('Order deleted.'))
+      .then(() => res.json('Order deleted!'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
   
@@ -127,8 +143,6 @@ router.route('/:id').get((req, res) => {
     
     Order.findById(request.params.id)
       .then(orders => {
-        
-        orders.orderId= request.body.orderId;
         orders.supplierName = request.body.supplierName;
         orders.supplierId = request.body.supplierId;
         orders.orderDate = request.body.orderDate;
@@ -144,5 +158,20 @@ router.route('/:id').get((req, res) => {
       })
       .catch(err => res.status(400).json('Error: ' + err));
   });
+
+module.exports = router;
+
+
+router.route('/updateStatus/:id').post((request, res) => {
+    
+  Order.findById(request.params.id)
+    .then(orders => {
+      orders.status = request.body.status;
+      orders.save()
+        .then(() => res.json('Order updated!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+});
 
 module.exports = router;

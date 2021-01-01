@@ -16,7 +16,9 @@ router.route('/').post((req, res) => {
   }
   //Check for existing user
   User.findOne({email})
-  .then(user=>{
+  .populate({path:"companyId"}) 
+  .exec((err,user)=>{
+    if(!err){
     if(!user) return res.status(400).json({msg:"User does not exist!"});
     
     //Validate password
@@ -28,7 +30,8 @@ router.route('/').post((req, res) => {
         
         id:user.id,
         username:user.username,
-        email:user.email
+        email:user.email,
+        companyId:user.companyId
         ,
         userRole:user.userRole
       },
@@ -42,13 +45,14 @@ router.route('/').post((req, res) => {
             id:user.id,
             username:user.username,
             email:user.email,
-            
+            companyId:user.companyId
           },
           userRole:user.userRole
         })
       }
       )
   }) 
+}
   }
   )
 });

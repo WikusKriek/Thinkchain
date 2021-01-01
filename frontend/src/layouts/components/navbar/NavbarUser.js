@@ -19,6 +19,8 @@ import Autocomplete from "../../../components/@vuexy/autoComplete/AutoCompleteCo
 import { useAuth0 } from "../../../authServices/auth0/auth0Service"
 import { history } from "../../../history"
 import { IntlContext } from "../../../utility/context/Internationalization"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee,faUser } from '@fortawesome/free-solid-svg-icons'
 
 const handleNavigation = (e, path) => {
   e.preventDefault()
@@ -32,10 +34,10 @@ const UserDropdown = props => {
       <DropdownItem
         tag="a"
         href="#"
-        onClick={e => handleNavigation(e, "/pages/profile")}
+        onClick={e => handleNavigation(e, "/pages/account-settings/")}
       >
         <Icon.User size={14} className="mr-50" />
-        <span className="align-middle">Edit Profile</span>
+        <span className="align-middle">Settings</span>
       </DropdownItem>
       <DropdownItem
         tag="a"
@@ -665,13 +667,7 @@ class NavbarUser extends React.PureComponent {
               <span className="user-status">Available</span>
             </div>
             <span data-tour="user">
-              <img
-                src={this.props.userImg}
-                className="round"
-                height="40"
-                width="40"
-                alt="avatar"
-              />
+            <FontAwesomeIcon icon={faUser} size="2x" />
             </span>
           </DropdownToggle>
           <UserDropdown {...this.props} />

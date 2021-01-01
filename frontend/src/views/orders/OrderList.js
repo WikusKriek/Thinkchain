@@ -10,6 +10,10 @@ import {
   Button,
   Row,
   Col,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   UncontrolledDropdown,
   UncontrolledButtonDropdown,
   DropdownMenu,
@@ -34,12 +38,15 @@ import {
   Send
 } from "react-feather"
 import classnames from "classnames"
+import EditOrderForm from "./Edit/EditOrderForm"
 import { history } from "../../history"
 import "../../assets/scss/plugins/tables/_agGridStyleOverride.scss"
 import "../../assets/scss/pages/users.scss"
 import Breadcrumbs from "../../components/@vuexy/breadCrumbs/BreadCrumb"
 class UsersList extends React.Component {
   state = {
+    editData:"",
+    modal: false,
     rowData: null,
     pageSize: 20,
     isVisible: true,
@@ -50,6 +57,7 @@ class UsersList extends React.Component {
     selectStatus: "All",
     verified: "All",
     department: "All",
+    currentFilter: this.props.match.params.filter,
     defaultColDef: {
       sortable: true
     },
@@ -138,15 +146,15 @@ class UsersList extends React.Component {
               <Edit
                 className="mr-50"
                 size={15}
-                onClick={() => history.push("/app/user/edit")}
+                onClick={()=>{
+                  this.setState({editData:params.data})
+                  this.toggleModal()}}
               />
               <Trash2
               className="mr-50"
                 size={15}
                 onClick={() => {
-                  let selectedData = this.gridApi.getSelectedRows()
-                  this.gridApi.updateRowData({ remove: selectedData })
-                }}
+                  this.handleDelete(params.data)}}
               />
               <Send
               className="mr-50"
@@ -180,6 +188,28 @@ class UsersList extends React.Component {
   },
   }
 
+   async refreshGridValues(){
+    const token=localStorage.getItem('token')
+ 
+    const config={
+      headers:{
+        'content-type':"application/json"
+      }
+    }
+    if (token){
+      config.headers['x-auth-token']=token;
+      
+    }
+  
+    await axios.post("http://localhost:5000/orders/ordersByStatus/",{status:this.state.currentFilter}, config).then(response => {
+      let rowData = response.data.data
+      console.log(rowData)
+      JSON.stringify(rowData)
+      this.setState({ rowData })
+      
+    }).catch(err=>console.log(err))
+  }
+
   async componentDidMount() {
     const token=localStorage.getItem('token')
  
@@ -193,12 +223,61 @@ class UsersList extends React.Component {
       
     }
   
-     await axios.get("http://localhost:5000/orders/", config).then(response => {
+     await axios.post("http://localhost:5000/orders/ordersByStatus/",{status:this.state.currentFilter}, config).then(response => {
       let rowData = response.data.data
+      console.log(rowData)
       JSON.stringify(rowData)
       this.setState({ rowData })
       
     }).catch(err=>console.log(err))
+    
+  }
+
+  handleDelete(data){
+    let selectedData = this.gridApi.getSelectedRows()
+    this.gridApi.updateRowData({ remove: selectedData })
+    var status="deleted"
+    if(data.status=="deleted") {
+      if (data.paid &&data.recieved){
+        status="completed"
+    }else{
+      status="progress"
+    }
+    }else{
+     
+        status="deleted"
+      
+  }
+  var order={
+    status
+  }
+    const token=localStorage.getItem('token')
+   
+      const config={
+        headers:{
+          'content-type':"application/json"
+        }
+      }
+      if (token){
+        config.headers['x-auth-token']=token;
+      }
+    
+      
+      //let params = getState().dataList.params
+      console.log(data)
+       axios
+        .post("http://localhost:5000/orders/updateStatus/"+data['_id'],order,config
+        )
+        .then(response => {
+          console.log(response)
+          //dispatch(getData(params))
+        })
+  }
+
+  toggleModal = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal
+    }))
   }
 
   onGridReady = params => {
@@ -247,28 +326,7 @@ class UsersList extends React.Component {
     }, 500)
   }
 
-  toggleCollapse = () => {
-    this.setState(state => ({ collapse: !state.collapse }))
-  }
-  onEntered = () => {
-    this.setState({ status: "Opened" })
-  }
-  onEntering = () => {
-    this.setState({ status: "Opening..." })
-  }
-
-  onEntered = () => {
-    this.setState({ status: "Opened" })
-  }
-  onExiting = () => {
-    this.setState({ status: "Closing..." })
-  }
-  onExited = () => {
-    this.setState({ status: "Closed" })
-  }
-  removeCard = () => {
-    this.setState({ isVisible: false })
-  }
+  
 
   render() {
     const { rowData, columnDefs, defaultColDef, pageSize } = this.state
@@ -280,86 +338,6 @@ class UsersList extends React.Component {
           breadCrumbActive="Draft Orders"
         />
        <Row className="app-user-list">
-        <Col sm="12">
-          <Card
-            className={classnames("card-action card-reload", {
-              "d-none": this.state.isVisible === false,
-              "card-collapsed": this.state.status === "Closed",
-              closing: this.state.status === "Closing...",
-              opening: this.state.status === "Opening...",
-              refreshing: this.state.reload
-            })}
-          >
-            <CardHeader>
-              <CardTitle>Filters</CardTitle>
-              <div className="actions">
-                <ChevronDown
-                  className="collapse-icon mr-50"
-                  size={15}
-                  onClick={this.toggleCollapse}
-                />
-                <RotateCw
-                  className="mr-50"
-                  size={15}
-                  onClick={() => {
-                    this.refreshCard()
-                    this.gridApi.setFilterModel(null)
-                  }}
-                />
-                <X size={15} onClick={this.removeCard} />
-              </div>
-            </CardHeader>
-            <Collapse
-              isOpen={this.state.collapse}
-              onExited={this.onExited}
-              onEntered={this.onEntered}
-              onExiting={this.onExiting}
-              onEntering={this.onEntering}
-            >
-              <CardBody>
-                {this.state.reload ? (
-                  <Spinner color="primary" className="reload-spinner" />
-                ) : (
-                  ""
-                )}
-                <Row>
-                 
-                  <Col lg="3" md="6" sm="12">
-                    <FormGroup className="mb-0">
-                      <Label for="status">Status</Label>
-                      <Input
-                        type="select"
-                        name="status"
-                        id="status"
-                        value={this.state.selectStatus}
-                        onChange={e => {
-                          this.setState(
-                            {
-                              selectStatus: e.target.value
-                            },
-                            () =>
-                              this.filterData(
-                                "status",
-                                this.state.selectStatus.toLowerCase()
-                              )
-                          )
-                        }}
-                      >
-                        <option value="All">all</option>
-                        <option value="completed">Completed</option>
-                        <option value="draft">Draft</option>
-                        <option value="progress">Progress</option>
-                        <option value="deleted">Deleted</option>
-                      </Input>
-                    </FormGroup>
-                  </Col>
-                 
-                  
-                </Row>
-              </CardBody>
-            </Collapse>
-          </Card>
-        </Col>
         <Col sm="12">
           <Card>
             <CardBody>
@@ -403,10 +381,9 @@ class UsersList extends React.Component {
                     <Button
                     className="add-new-btn"
                     color="primary"
-                    onClick={() => {history.push("/createOrders/")}}
+                    onClick={() => {this.refreshGridValues()}}
                     outline>
-                    <Plus size={15} className="mr-50"/>
-                    <span className="align-middle">Add New</span>
+                    <span className="align-middle">Refresh</span>
                   </Button>
                     </div>
                   <div className="filter-actions d-flex">
@@ -470,6 +447,25 @@ class UsersList extends React.Component {
               </div>
             </CardBody>
           </Card>
+          <Modal
+                  isOpen={this.state.modal}
+                  toggle={this.toggleModal}
+                  className="modal-dialog-centered modal-lg"
+                >
+                  <ModalHeader toggle={this.toggleModal}>
+                    Edit Order {this.state.editData.orderId}
+                  </ModalHeader>
+                  <ModalBody>
+                    <EditOrderForm
+                    order={this.state.editData}
+                    />
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="primary" onClick={this.toggleModal}>
+                      Accept
+                    </Button>{" "}
+                  </ModalFooter>
+                </Modal>
         </Col>
       </Row>
       </React.Fragment>

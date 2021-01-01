@@ -14,7 +14,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.Circle size={10} />,
         navLink: "/",
-        permissions: ["admin", "editor","user"]
+        permissions: ["admin", "editor","user","companyAdmin"]
       },
       {
         id: "eCommerceDash",
@@ -804,7 +804,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.Settings size={16} />,
         navLink: "/pages/account-settings",
-        permissions: ["admin", "editor"]
+        permissions: ["admin", "editor","companyAdmin"]
       },
       {
         id: "faq",
@@ -1096,7 +1096,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.List size={16} />,
         navLink: "/product-grid",
-        permissions: ["admin","user"]
+        permissions: ["admin","user","companyAdmin"]
       },
       {
         id: "create_supplier_grid",
@@ -1104,7 +1104,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.List size={16} />,
         navLink: "/supplier-grid",
-        permissions: ["admin","user"]
+        permissions: ["admin","user","companyAdmin"]
       },
       {
         id: "create_supplier",
@@ -1121,7 +1121,7 @@ const horizontalMenuConfig = [
     title: "Orders",
     type: "dropdown",
     icon: <Icon.Truck size={16} />,
-    permissions: ["admin","user"],
+    permissions: ["admin","user","companyAdmin"],
     children: [
       {
         id: "view_orders",
@@ -1129,7 +1129,7 @@ const horizontalMenuConfig = [
         type: "item",
         icon: <Icon.FolderPlus size={16} />,
         navLink: "/orders/",
-        permissions: ["admin","user"]
+        permissions: ["admin","user","companyAdmin"]
         
       }
       ]

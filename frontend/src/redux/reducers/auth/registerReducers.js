@@ -1,3 +1,5 @@
+import { actions } from "react-table";
+
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
@@ -23,7 +25,8 @@ export const register = (state = initialState, action) => {
         values: action.payload,
         isAuthenticated:true,
         isLoading:false,
-        token:action.payload.token
+        token:action.payload.token,
+        userRole:action.payload.userRole
       }
       case "REGISTER_FAIL":
         localStorage.removeItem('token');

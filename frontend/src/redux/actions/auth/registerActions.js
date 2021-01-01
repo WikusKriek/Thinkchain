@@ -57,10 +57,20 @@ export const signupWithFirebase = (email, password, name) => {
 export const signupWithJWT = (email, password, name) => {
   return dispatch => {
     axios
+    .post("http://localhost:5000/company/add", {
+      email: email,
+      password: password,
+      companyName: name
+    })
+    .then(res => {
+      console.log(res)
+    if(res.status==200){
+    axios
       .post("http://localhost:5000/users/add", {
         email: email,
         password: password,
-        username: name
+        username: name,
+        companyId:res.data.company.id
       })
       .then(response => {
         var loggedInUser
@@ -78,12 +88,20 @@ export const signupWithJWT = (email, password, name) => {
               userRole: response.data.user.userRole,
                token }
           })
-
+          dispatch({
+            type: "LOGIN_WITH_JWT",
+            payload: { loggedInUser, 
+              loggedInWith: "jwt", 
+              userRole: response.data.userRole,
+               token }
+          })
           history.push("/")
         }
 
       })
       .catch(err => console.log(err))
-
+    }
+    })
+    .catch(err => console.log(err))
   }
 }

@@ -33,9 +33,9 @@ draftclick(){
     return (
       <React.Fragment>
         <Breadcrumbs
-          breadCrumbTitle="Statistics Cards"
-          breadCrumbParent="Card"
-          breadCrumbActive="Statistics Cards"
+          breadCrumbTitle="Stock Orders"
+          breadCrumbParent="Orders"
+          breadCrumbActive="Stock Orders"
         />
         <Row>
         <Col  sm="12" className="mb-1">
@@ -51,7 +51,7 @@ draftclick(){
                     </div>
           </Col>
           <Col xl="3" lg="3" sm="6">
-          <Link to="/orderslist/all">
+          <Link to="/orderslist/draft">
             <StatisticsCard
               hideChart
               iconBg="primary"
@@ -63,7 +63,7 @@ draftclick(){
             </Link>
           </Col>
           <Col xl="3" lg="3" sm="6">
-          <Link to="/app/user/list">
+          <Link to="/orderslist/progress">
             <StatisticsCard
               hideChart
               iconBg="success"
@@ -74,6 +74,7 @@ draftclick(){
             </Link>
           </Col>
           <Col xl="3" lg="3" sm="6">
+          <Link to="/orderslist/deleted">
             <StatisticsCard
               hideChart
               iconBg="warning"
@@ -81,8 +82,10 @@ draftclick(){
               stat="97"
               statTitle="Deleted Orders"
             />
+            </Link>
           </Col>
           <Col xl="3" lg="3" sm="6">
+          <Link to="/orderslist/completed">
             <StatisticsCard
               hideChart
               iconBg="danger"
@@ -90,6 +93,7 @@ draftclick(){
               stat="124"
               statTitle="Completed Orders"
             />
+            </Link>
           </Col>
          
           

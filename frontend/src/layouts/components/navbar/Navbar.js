@@ -8,7 +8,9 @@ import {
 } from "../../../redux/actions/auth/loginActions"
 import NavbarBookmarks from "./NavbarBookmarks"
 import NavbarUser from "./NavbarUser"
-import userImg from "../../../assets/img/portrait/small/avatar-s-11.jpg"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee,faUser } from '@fortawesome/free-solid-svg-icons'
+import userImg from "../../../assets/img/svg/user-solid.svg"
 
 const UserName = props => {
   let username = ""
@@ -81,9 +83,7 @@ const ThemeNavbar = props => {
                 handleAppOverlay={props.handleAppOverlay}
                 changeCurrentLang={props.changeCurrentLang}
                 userName={<UserName userdata={user} {...props} />}
-                userImg={
-                   require("../../../assets/img/portrait/small/avatar-s-2.jpg")
-                }
+                userImg={<FontAwesomeIcon icon={faUser} />}
                 loggedInWith={
                   'jwt'
                 }

@@ -79,16 +79,18 @@ class Invoice extends React.Component {
     return (
       <React.Fragment>
         <Breadcrumbs
-          breadCrumbTitle="Invoice"
-          breadCrumbParent="Pages"
-          breadCrumbActive="Invoice"
+          breadCrumbTitle="Supply Order"
+          breadCrumbParent="Orders"
+          breadCrumbActive="Supply Order"
         />
         <Row>
           <Col className="mb-1 invoice-header" md="5" sm="12">
             <InputGroup>
               <Input placeholder="Email" />
               <InputGroupAddon addonType="append">
-                <Button.Ripple color="primary" outline>
+                <Button.Ripple color="primary" outline onClick={()=>{
+                  window.location.href = "mailto:user@example.com?subject=Subject&body=message%20goes%20here";
+                }}>
                   Send Invoice
                 </Button.Ripple>
               </InputGroupAddon>
@@ -124,11 +126,11 @@ class Invoice extends React.Component {
                     </Media>
                   </Col>
                   <Col md="6" sm="12" className="text-right">
-                    <h1>Invoice</h1>
+                    <h1>Supply Order</h1>
                     <div className="invoice-details mt-2">
-                      <h6>INVOICE NO.</h6>
+                      <h6>ORDER NO.</h6>
                       <p>{orderId}</p>
-                      <h6 className="mt-2">INVOICE DATE</h6>
+                      <h6 className="mt-2">ORDER DATE</h6>
                       <p>{date}</p>
                     </div>
                   </Col>

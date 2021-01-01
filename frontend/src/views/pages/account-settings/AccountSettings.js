@@ -12,11 +12,13 @@ import classnames from "classnames"
 import { Settings, Lock, Info, Instagram, Link, Bell } from "react-feather"
 import GeneralTab from "./General"
 import ChangePassword from "./ChangePassword"
-import InfoTab from "./Info"
+import CompanyInfoTab from "./companyInfo"
 import SocialLinks from "./SocialLinks"
 import Connection from "./Connection"
 import Notifications from "./Notifications"
+import { connect } from "react-redux"
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb"
+import { loginWithJWT } from "../../../redux/actions/auth/loginActions"
 
 import "../../../assets/scss/pages/account-settings.scss"
 
@@ -42,10 +44,15 @@ class AccountSettings extends React.Component {
       window.addEventListener("resize", this.updateWidth)
     }
   }
+
+  componentWillMount() {
+   
+  }
   
 
   render() {
     let {windowWidth} = this.state
+    let {values}=this.props.values
     return (
       <React.Fragment>
         <Breadcrumbs
@@ -91,7 +98,7 @@ class AccountSettings extends React.Component {
                 }}
               >
                 <Info size={16} />
-                <span className="d-md-inline-block d-none align-middle ml-1">Info</span>
+                <span className="d-md-inline-block d-none align-middle ml-1">Company Info</span>
               </NavLink>
             </NavItem>
             <NavItem>
@@ -138,13 +145,19 @@ class AccountSettings extends React.Component {
             <CardBody>
               <TabContent activeTab={this.state.activeTab}>
                 <TabPane tabId="1">
-                  <GeneralTab />
+                  <GeneralTab
+                  values={values}
+                  />
                 </TabPane>
                 <TabPane tabId="2">
-                  <ChangePassword />
+                  <ChangePassword
+                  values={values}
+                   />
                 </TabPane>
                 <TabPane tabId="3">
-                  <InfoTab />
+                  <CompanyInfoTab
+                  values={values}
+                  />
                 </TabPane>
                 <TabPane tabId="4">
                   <SocialLinks />
@@ -163,5 +176,10 @@ class AccountSettings extends React.Component {
     )
   }
 }
+const mapStateToProps = state => {
+  return {
+    values: state.auth.login
+  }
+}
 
-export default AccountSettings
+export default connect(mapStateToProps, { loginWithJWT })(AccountSettings)

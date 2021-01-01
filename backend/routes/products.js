@@ -83,7 +83,7 @@ router.route('/add').post(auth,(request, res) => {
   const newProduct = new Product({userId,number,name,salePrice,costPrice,qty,consignment,packaging,minQty,recQty,supplierId});
 
   newProduct.save()
-    .then(() => res.json('Product added!'))
+    .then(savedProduct => res.json({msg:'Product added!',savedProduct}))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
