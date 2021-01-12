@@ -9,6 +9,9 @@ import knowledgeBaseQuestion from "./views/pages/knowledge-base/Questions"
 import { ContextLayout } from "./utility/context/Layout"
 
 // Route-based code splitting
+const presentationPage = lazy(() =>
+  import("./views/pages/presentationPage/presentationPage")
+)
 const supplyOrder = lazy(() =>
   import("./views/orders/supplyOrder")
 )
@@ -204,7 +207,7 @@ const accessControl = lazy(() =>
   import("./extensions/access-control/AccessControl")
 )
 // Set Layout and Component Using App Route
-const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
+const RouteConfig = ({ component: Component, fullLayout,presentationLayout, ...rest }) => (
   <Route
     {...rest}
     render={props => {
@@ -212,7 +215,9 @@ const RouteConfig = ({ component: Component, fullLayout, ...rest }) => (
         <ContextLayout.Consumer>
           {context => {
             let LayoutTag =
-              fullLayout === true
+            presentationLayout === true
+                ? context.presentationLayout
+                :fullLayout === true
                 ? context.fullLayout
                 : context.state.activeLayout === "horizontal"
                 ? context.horizontalLayout
@@ -244,8 +249,12 @@ class AppRouter extends React.Component {
       // Set the directory path if you are deploying in sub-folder
       <Router history={history}>
         <Switch>
-          <AppRoute exact path="/" component={analyticsDashboard} />
-
+          <AppRoute path="/analytics-dashboard" component={analyticsDashboard} />
+          <AppRoute
+            exact path="/"
+            component={presentationPage}
+            presentationLayout
+          />
           
           <AppRoute
             path="/ecommerce-dashboard"

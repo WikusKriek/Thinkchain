@@ -2,8 +2,10 @@ import React from "react"
 import VerticalLayout from "../../layouts/VerticalLayout"
 import FullLayout from "../../layouts/FullpageLayout"
 import HorizontalLayout from "../../layouts/HorizontalLayout"
+import PresentationLayout from "../../layouts/PresentationLayout"
 import themeConfig from "../../configs/themeConfig"
 const layouts = {
+  presentation:PresentationLayout,
   vertical: VerticalLayout,
   full: FullLayout,
   horizontal: HorizontalLayout
@@ -84,6 +86,7 @@ class Layout extends React.Component {
       <ContextLayout.Provider
         value={{
           state: this.state,
+          presentationLayout: layouts["presentation"],
           fullLayout: layouts["full"],
           VerticalLayout: layouts["vertical"],
           horizontalLayout: layouts["horizontal"],

@@ -56,7 +56,7 @@ export const submitLoginWithFireBase = (email, password, remember) => {
                 })
               })
           }
-          history.push("/")
+          history.push("/analytics-dashboard/")
         })
       })
       .catch(error => {
@@ -86,7 +86,7 @@ export const loginWithFB = () => {
             loggedInWith: "firebase"
           }
         })
-        if (user) history.push("/")
+        if (user) history.push("/analytics-dashboard/")
       })
       .catch(error => {
         console.log(error)
@@ -200,7 +200,7 @@ export const loginWithJWT = user => {
                token }
           })
 
-          history.push("/")
+          history.push("/analytics-dashboard/")
         }
       })
       .catch(err => console.log(err))
@@ -210,7 +210,7 @@ export const loginWithJWT = user => {
 export const logoutWithJWT = () => {
   return dispatch => {
     dispatch({ type: "LOGOUT_WITH_JWT", payload: {} })
-    history.push("/pages/login")
+    history.push("/")
   }
 }
 

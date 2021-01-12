@@ -46,7 +46,7 @@ export const signupWithFirebase = (email, password, name) => {
             })
           }
         })
-        history.push("/")
+        history.push("/analytics-dashboard/")
       })
       .catch(error => {
         console.log(error.message)
@@ -95,7 +95,7 @@ export const signupWithJWT = (email, password, name) => {
               userRole: response.data.userRole,
                token }
           })
-          history.push("/")
+          history.push("/analytics-dashboard/")
         }
 
       })

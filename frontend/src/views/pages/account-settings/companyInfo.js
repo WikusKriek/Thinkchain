@@ -154,7 +154,6 @@ class CompanyInfoTab extends React.Component {
                   type="text"
                   name="number"
                   id="number"
-                  placeholder="Phone Number"
                   defaultValue={this.state.tel}
                   onChange={e => this.setState({ tel: e.target.value })}
                 />
@@ -167,7 +166,6 @@ class CompanyInfoTab extends React.Component {
               <Input 
               type="text" 
               id="address1" 
-              placeholder="Last Name Here" 
               defaultValue={this.state.addressLine}
               onChange={e => this.setState({ addressLine: e.target.value })} />
             </FormGroup>

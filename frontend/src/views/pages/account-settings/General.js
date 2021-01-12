@@ -55,13 +55,21 @@ class General extends React.Component {
             <Col sm="12">
               <FormGroup>
                 <Label for="userName">Username</Label>
-                <Input id="userName" defaultValue={values.loggedInUser.username} />
+                <Input 
+                id="userName" 
+                defaultValue={this.state.name}
+                onChange={e => this.setState({ name: e.target.value })}
+                />
               </FormGroup>
             </Col>
             <Col sm="12">
               <FormGroup>
                 <Label for="email">Email</Label>
-                <Input id="email" defaultValue={values.loggedInUser.email} />
+                <Input 
+                id="email" 
+                defaultValue={this.state.email}
+                onChange={e => this.setState({ email: e.target.value })}
+                />
               </FormGroup>
             </Col>
             {/*
@@ -84,7 +92,8 @@ class General extends React.Component {
                 <Label for="company">Company</Label>
                 <Input
                   id="company"
-                  defaultValue={values.loggedInUser.companyId.companyName}
+                  defaultValue={this.state.name}
+                onChange={e => this.setState({ name: e.target.value })}
                 />
               </FormGroup>
             </Col>

@@ -232,7 +232,7 @@ class HorizontalLayout extends PureComponent {
           footerType={customizerProps.footerType}
           hideScrollToTop={customizerProps.hideScrollToTop}
         />
-        {customizerProps.disableCustomizer !== true ? (
+        {customizerProps.disableCustomizer == true ? (
           <Customizer
             scrollToTop={customizerProps.hideScrollToTop}
             activeNavbar={customizerProps.navbarColor}
