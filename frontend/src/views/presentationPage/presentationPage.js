@@ -36,7 +36,7 @@ export default function EcommercePage() {
   return (
     <div>
       <Header
-        brand="GGnotes"
+        brand="Day-bu-2"
         links={<HeaderLinks dropdownHoverColor="info" />}
         fixed
         color="transparent"
