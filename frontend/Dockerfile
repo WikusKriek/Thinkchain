@@ -1,4 +1,4 @@
-FROM node:13.12.0-alpine as build
+FROM node:13.12.0 as build
 
 RUN mkdir -p /app/src
 
@@ -14,9 +14,7 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 80
-
-FROM nginx:stable-alpine
+FROM nginx
 
 COPY --from=build /app/src/build /usr/share/nginx/html
 

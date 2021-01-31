@@ -208,7 +208,7 @@ class PresentationLayout extends PureComponent {
           footerType={customizerProps.footerType}
           hideScrollToTop={customizerProps.hideScrollToTop}
         />
-        {customizerProps.disableCustomizer == true ? (
+        {customizerProps.disableCustomizer == false ? (
           <Customizer
             scrollToTop={customizerProps.hideScrollToTop}
             activeNavbar={customizerProps.navbarColor}

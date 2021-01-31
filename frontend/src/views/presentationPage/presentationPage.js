@@ -19,6 +19,7 @@ import SectionPricing from "./Sections/SectionPricing.js";
 //import SectionLatestNotes from "./Sections/SectionLatestNotes.js";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/styles";
+import cardsTest from "../../assets/img/assets-for-demo/cards-test.png";
 
 // @material-ui icons
 
@@ -36,39 +37,43 @@ export default function EcommercePage() {
   return (
     <div>
       <Header
-        brand="Day-bu-2"
+        brand="Day-bu"
         links={<HeaderLinks dropdownHoverColor="info" />}
         fixed
         color="transparent"
         changeColorOnScroll={{
           height: 300,
-          color: "primary"
+          color: "info"
         }}
       />
       <Parallax
-        image={require("../../assets/img/profile/post-media/25.jpg")}
-        filter="dark"
-        small
+        image={require("../../assets/img/front.svg")}
+        className={classes.parallax}
+        
       >
         <div className={classes.container}>
           <GridContainer>
-            <GridItem
-              md={8}
-              sm={8}
-              className={classNames(
-                classes.mlAuto,
-                classes.mrAuto,
-                classes.textCenter
-              )}
-            >
-              <div className={classes.brand}>
-                <h1 className={classes.title}>Ecommerce Page!</h1>
-                <h4>
-                  Free global delivery for all products. Use coupon{" "}
-                  <b>25summer</b> for an extra 25% Off
-                </h4>
-              </div>
-            </GridItem>
+          <GridItem md={7} sm={7}>
+            <div className={classes.imageContainer}>
+              <img src={{}} alt="views" />
+            </div>
+          </GridItem>
+          <GridItem md={4} sm={5} className={classes.mlAuto}>
+            <div className={classes.sectionDescription}>
+              <h3 className={classes.title}>Unconventional Cards</h3>
+              <h6 className={classes.description}>
+                One Card for Every Problem
+              </h6>
+              <h5 className={classes.description}>
+                We love cards and everybody on the web seems to. We have gone
+                above and beyond with options for you to organise your
+                information. From cards designed for blog posts, to product
+                cards or user profiles, you will have many options to choose
+                from. All the cards follow the material principles and have a
+                design that stands out.
+              </h5>
+            </div>
+          </GridItem>
           </GridContainer>
         </div>
       </Parallax>
