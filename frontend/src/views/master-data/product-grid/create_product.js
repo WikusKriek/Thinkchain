@@ -31,6 +31,7 @@ import { ContextLayout } from "../../../utility/context/Layout"
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 import classnames from "classnames"
+import { history } from "../../../history"
 
 import axios from "axios"
 import { Formik, Field, Form, ErrorMessage, FormikConsumer} from "formik"
@@ -179,8 +180,10 @@ class AggridTable extends React.Component {
   
      axios.get("http://localhost:5000/supplier/list/", config).then(response => {
       let suppliers = response.data.data
+      if (suppliers.lengst!=0){
       JSON.stringify(suppliers)
       this.setState({ suppliers })
+      }
       
       
     }).catch(err=>console.log(err))
@@ -329,9 +332,17 @@ class AggridTable extends React.Component {
     }
   }
   toggleModal = () => {
+    if (this.state.suppliers.length==0){
+      setTimeout(() => {
+        toast.error("Please add a supplier first")
+      }, 200);
+      history.push("/supplier-grid/")
+      
+    }else{
     this.setState(prevState => ({
       modal: !prevState.modal
     }))
+  }
   }
 
   render() {

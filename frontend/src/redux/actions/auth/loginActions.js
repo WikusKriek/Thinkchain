@@ -182,7 +182,7 @@ export const loginWithGithub = () => {
 export const loginWithJWT = user => {
   return dispatch => {
     axios
-      .post("http://localhost:5000/auth", {
+      .post("/auth", {
         email: user.email,
         password: user.password
       })
@@ -218,7 +218,7 @@ export const loadUser = () => (dispatch,getState)=>{
   
     dispatch({ type: "USER_LOADING" });
     
-    return axios.get('http://localhost:5000/auth/user',tokenConfig(getState))
+    return axios.get('/auth/user',tokenConfig(getState))
     .then(res=>
       dispatch({
       type:'USER_LOADED',

@@ -1131,6 +1131,15 @@ const horizontalMenuConfig = [
         navLink: "/orders/",
         permissions: ["admin","user","companyAdmin"]
         
+      },
+      {
+        id: "invoice_add",
+        title: "Invoice Add",
+        type: "item",
+        icon: <Icon.FolderPlus size={16} />,
+        navLink: "/invoice/add",
+        permissions: ["admin","user","companyAdmin"]
+        
       }
       ]
   }

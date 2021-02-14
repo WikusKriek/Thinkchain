@@ -2,19 +2,14 @@ version: '3'
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: ./Dockerfile
-    image: "day-bu-production/backend"
+    image: "wikuskriek/day-bu-production:backend"
     ports:
       - "5000:5000"
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: ./Dockerfile
-    image: "day-bu-production/frontend"
+    image: "wikuskriek/day-bu-production:frontend"
     stdin_open: true
+    depends_on:
+      - backend
     ports:
-      - "3000:80"
-    links:
-      - "backend:be"
+      - "80:80"
+    

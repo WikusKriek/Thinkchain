@@ -19,7 +19,7 @@ import SectionPricing from "./Sections/SectionPricing.js";
 //import SectionLatestNotes from "./Sections/SectionLatestNotes.js";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/styles";
-import cardsTest from "../../assets/img/assets-for-demo/cards-test.png";
+import Inventory from "../../assets/img/inventory.png";
 
 // @material-ui icons
 
@@ -47,7 +47,7 @@ export default function EcommercePage() {
         }}
       />
       <Parallax
-        image={require("../../assets/img/front.svg")}
+        image={require("../../assets/img/profile_1.png")}
         className={classes.parallax}
         
       >
@@ -55,7 +55,7 @@ export default function EcommercePage() {
           <GridContainer>
           <GridItem md={7} sm={7}>
             <div className={classes.imageContainer}>
-              <img src={{}} alt="views" />
+              <img src={Inventory} alt="views" />
             </div>
           </GridItem>
           <GridItem md={4} sm={5} className={classes.mlAuto}>
